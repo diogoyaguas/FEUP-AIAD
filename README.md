@@ -15,7 +15,7 @@ João Augusto dos Santos Lima<br>
 * E-Mail: up201605314@fe.up.pt
 
 ### Project description <hr>
-[Civilization Project](https://docs.google.com/document/d/1h-eEixjVxt7AA2ZcLfiRKmXZoYjZzY8SMuLyzgD6hJg/edit?usp=sharing)
+#### Civilization Project
 
 
 **Description**:<br>
