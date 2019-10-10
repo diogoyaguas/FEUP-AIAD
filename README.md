@@ -1,8 +1,7 @@
 # FEUP-AIAD
 Project for the Agents and Distributed Artificial Intelligence (AIAD) class of the Master in Informatics and Computer Engineering (MIEIC) at the Faculty of Engineering of the University of Porto (FEUP).
 <br><br>
-### Team Members
-<hr>
+### Team Members <hr>
 Amadeu Prazeres Pereira<br>
 * Student Number: 201605646
 * E-Mail: up201605646@fe.up.pt
@@ -15,8 +14,7 @@ João Augusto dos Santos Lima<br>
 * Student Number: 201605314
 * E-Mail: up201605314@fe.up.pt
 
-### Project description
-<hr>
+### Project description <hr>
 [Civilization Project](https://docs.google.com/document/d/1h-eEixjVxt7AA2ZcLfiRKmXZoYjZzY8SMuLyzgD6hJg/edit?usp=sharing)
 
 
