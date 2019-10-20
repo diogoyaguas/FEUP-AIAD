@@ -18,23 +18,23 @@ public class Game {
         Game.singleton = this;
         game_container = new Container();
         for (int i = 0; i < number_of_agents; i++) {
-            CreateNewAgent("agent" + agent_number, "MilitarAgent");
+            createNewAgent("agent" + agent_number, "MilitarAgent");
             agent_number++;
         }
     }
 
-    private void StartAllAgents() throws StaleProxyException {
+    public void startAllAgents() throws StaleProxyException {
         for (AgentController agent : agent_list) {
             agent.start();
         }
     }
 
-    private void StartAgent(int index) throws StaleProxyException {
+    public void startAgent(int index) throws StaleProxyException {
         agent_list.get(index).start();
     }
 
-    private void CreateNewAgent(String name, String type) {
-        AgentController ac = game_container.AddAgentContainer(name, type);
+    public void createNewAgent(String name, String type) {
+        AgentController ac = game_container.addAgentContainer(name, type);
         agent_list.add(ac);
     }
 }

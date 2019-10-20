@@ -2,16 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="3b599549-10c9-4e7e-a061-74ac54fc7d10" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/agents/types/MilitarAgent.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/game/Container.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/game/Game.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/agents/behaviours/cyclic/CyclicAgentBehaviour.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/agents/behaviours/cyclic/Test.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/agents/behaviours/single/SingleAgentBehaviour.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/agents/behaviours/single/Test.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/APDescription.txt" beforeDir="false" afterPath="$PROJECT_DIR$/APDescription.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MTPs-Main-Container.txt" beforeDir="false" afterPath="$PROJECT_DIR$/MTPs-Main-Container.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/test/agents/ExampleAgent.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/test/agents/GameAgent.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/test/agents/GameAgent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/test/agents/types/MilitarAgent.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/test/agents/types/MilitarAgent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/test/game/Container.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/test/game/Container.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/test/game/Game.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/test/game/Game.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/test/main/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/test/main/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/agents/ExampleAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/GameAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/agents/GameAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/GameAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/agents/types/MilitarAgent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/agents/types/MilitarAgent.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Container.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Container.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/game/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/game/Game.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -87,7 +91,7 @@
       <workItem from="1570707621019" duration="183000" />
       <workItem from="1570707945349" duration="64000" />
       <workItem from="1570708023369" duration="2444000" />
-      <workItem from="1571582778232" duration="5585000" />
+      <workItem from="1571582778232" duration="7415000" />
     </task>
     <servers />
   </component>

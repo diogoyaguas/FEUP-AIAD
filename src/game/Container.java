@@ -27,7 +27,7 @@ public class Container {
      *
      * @return Returns AgentController is accepts a new agent or null otherwise
      */
-    public AgentController AddAgentContainer(String name,String agent_type)
+    public AgentController addAgentContainer(String name,String agent_type)
     {
         try {
             Object[] agentArgs = new Object[0];
