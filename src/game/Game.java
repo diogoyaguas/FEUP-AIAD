@@ -1,5 +1,6 @@
 package game;
 
+import game.board.Board;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
@@ -12,6 +13,8 @@ public class Game {
 
     private ArrayList<AgentController> agent_list = new ArrayList<AgentController>();
 
+    private Board game_board;
+
     public static Game singleton;
 
     public Game(int number_of_agents) {
@@ -21,6 +24,7 @@ public class Game {
             createNewAgent("agent" + agent_number, "MilitarAgent");
             agent_number++;
         }
+        game_board = new Board(10,10);
     }
 
     public void startAllAgents() throws StaleProxyException {

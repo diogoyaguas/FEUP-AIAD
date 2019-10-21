@@ -10,12 +10,12 @@ public class Test extends SingleAgentBehaviour {
 
     @Override
     public void action() {
-        System.out.println(n++ + " ola");
+        System.out.println("Estou só a fazer contas de somar " + n++);
 
     }
 
     @Override
     public boolean done() {
-        return n == 10;
+        return n == 3;
     }
 }
