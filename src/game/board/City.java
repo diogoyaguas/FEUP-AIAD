@@ -66,7 +66,6 @@ public class City {
         this.owner=new_owner;
         religion_owner = 100;
         religion_attacker = new HashMap<GameAgent, Integer>();
-        
     }
 
 
