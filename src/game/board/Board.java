@@ -1,5 +1,7 @@
 package game.board;
 
+import agents.GameAgent;
+
 import java.util.ArrayList;
 
 public class Board {
@@ -14,7 +16,7 @@ public class Board {
             board.add(new ArrayList<City>());
             for(int j=0;j<height;j++)
             {
-                board.get(0).add(new City());
+                board.get(0).add(new City(null));
             }
         }
     }
@@ -29,5 +31,14 @@ public class Board {
         this.board.get(x).set(y,region);
     }
 
+    public void setCityOwner(int x, int y, GameAgent owner)
+    {
+        this.board.get(x).get(y).setOwner(owner);
+    }
+
+    public ArrayList<ArrayList<City>> getBoard()
+    {
+        return this.board;
+    }
 
 }
