@@ -16,7 +16,7 @@ public class City {
     private int amount_money_producing;
 
     private int convertion_rate; //pode não ser util
-    private int religion_owner;
+    private int owner_religion;
     private HashMap<GameAgent, Integer> religion_attacker;
 
     private int defences;
@@ -55,7 +55,7 @@ public class City {
         cost_to_upgrade = 100;
         amount_money_producing = 5;
         amount_on_upgrade = 0;
-        religion_owner = 100;
+        owner_religion = 100;
         religion_attacker = new HashMap<GameAgent, Integer>();
         defences = 0;
         city_price=50;
@@ -64,14 +64,9 @@ public class City {
     public void convertCity(GameAgent new_owner)
     {
         this.owner=new_owner;
-        religion_owner = 100;
+        owner_religion = 100;
         religion_attacker = new HashMap<GameAgent, Integer>();
     }
-
-
-
-
-
 
     public int getCurrentLeve() {
         return this.current_level;
