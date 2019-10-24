@@ -1,6 +1,7 @@
-.idea
+.idea/
+FEUP-AIAD.iml
 APDescription.txt
 MTPs-Container-1.txt
 MTPs-Main-Container.txt
 test.iml
-out
+out/
