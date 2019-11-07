@@ -1,12 +1,15 @@
 package main;
 
-import game.Container;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
+import jade.core.Runtime;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
-import jade.core.Runtime;
 import jade.wrapper.StaleProxyException;
+
+import java.util.Scanner;
+
+import static game.Game.addAgents;
 
 public class Main{
     public static void main(String[] args) {
@@ -20,23 +23,24 @@ public class Main{
         try {
             AgentController gc = mainContainer.createNewAgent("GameController","agents.GameController", agentArgs);
             gc.start();
-//            mainContainer.createNewAgent("p1","agents.types.MilitarAgent", agentArgs);
+            //mainContainer.createNewAgent("p1","agents.types.MilitaryAgent", agentArgs);
 
         } catch (StaleProxyException e) {
             e.printStackTrace();
         }
-//        addAgents();
+
+        Scanner number = new Scanner( System.in );
+
+        System.out.print( "Enter number of players: (Maximum: 10)\n:::" );
+        int players = number.nextInt();
+
+        while(players >= 10 || (players <= 1)) {
+            System.out.print( "Enter valid number of players: (Maximum: 10)\n::: " );
+            players = number.nextInt();
+        }
+
+        addAgents(players);
 
     }
 
-    private static void addAgents() {
-        int counter = 0;
-        Container gameContainer = new Container();
-
-        gameContainer.addAgent("Player" + ++counter, "agents.types.MilitarAgent");
-        gameContainer.addAgent("Player" + ++counter, "agents.types.MilitarAgent");
-        gameContainer.addAgent("Player" + ++counter, "agents.types.MilitarAgent");
-        gameContainer.addAgent("Player" + ++counter, "agents.types.MilitarAgent");
-        gameContainer.addAgent("Player" + ++counter, "agents.types.MilitarAgent");
-    }
 }

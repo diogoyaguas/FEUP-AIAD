@@ -13,7 +13,6 @@ import jade.proto.SubscriptionInitiator;
 import jade.util.leap.Iterator;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Queue;
 
 public class GameController extends Agent {
