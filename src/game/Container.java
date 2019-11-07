@@ -23,11 +23,11 @@ public class Container {
      *
      * @return Returns AgentController is accepts a new agent or null otherwise
      */
-    public AgentController addAgentContainer(String name,String agent_type)
+    public AgentController addAgent(String name, String agentType)
     {
         try {
             Object[] agentArgs = new Object[0];
-            return container.createNewAgent(name, agent_type, agentArgs);
+            return container.createNewAgent(name, agentType, agentArgs);
         } catch (StaleProxyException e) {
             return null;
         }
