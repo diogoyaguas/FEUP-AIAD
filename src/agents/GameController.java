@@ -33,13 +33,13 @@ public class GameController extends Agent {
         SearchConstraints sc = new SearchConstraints();
 
         addBehaviour(new SubscriptionInitiator(this, DFService.createSubscriptionMessage(this, getDefaultDF(), dfd, sc)) {
+
             protected void handleInform(ACLMessage inform) {
                 System.out.println("Agent " + getLocalName() + ": Notification received from DF");
                 try {
                     DFAgentDescription[] results = DFService.decodeNotification(inform.getContent());
                     if (results.length > 0) {
-                        for (int i = 0; i < results.length; ++i) {
-                            DFAgentDescription dfd = results[i];
+                        for (DFAgentDescription dfd : results) {
                             AID player = dfd.getName();
 
                             Iterator it = dfd.getAllServices();

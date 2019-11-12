@@ -1,5 +1,6 @@
 package main;
 
+import agents.GameController;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -16,6 +17,7 @@ public class Main{
 
         Runtime rt = Runtime.instance();
         Profile p1 = new ProfileImpl();
+        p1.setParameter(Profile.CONTAINER_NAME, "GameContainer");
         p1.setParameter(Profile.GUI,"true");
         ContainerController mainContainer = rt.createMainContainer(p1);
 
@@ -23,7 +25,6 @@ public class Main{
         try {
             AgentController gc = mainContainer.createNewAgent("GameController","agents.GameController", agentArgs);
             gc.start();
-            //mainContainer.createNewAgent("p1","agents.types.MilitaryAgent", agentArgs);
 
         } catch (StaleProxyException e) {
             e.printStackTrace();

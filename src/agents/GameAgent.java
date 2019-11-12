@@ -9,7 +9,7 @@ import jade.lang.acl.ACLMessage;
 
 public abstract class GameAgent extends Agent {
 
-    protected int[] pos;
+    private int[] pos;
 
     public void setup()
     {
@@ -26,7 +26,7 @@ public abstract class GameAgent extends Agent {
             e.printStackTrace();
         }
 
-        while (true) {
+        while (pos == null) {
             ACLMessage msg = blockingReceive();
             String[] params = msg.getContent().split(" ");
             if (params[0].equals("Init")) {
@@ -35,7 +35,7 @@ public abstract class GameAgent extends Agent {
             }
         }
 
-        System.out.println("Agent " + getName() + ": Coords " + pos[0] + "," + pos[1]);
+        System.out.println("Agent " + getName() + ": Coords " + pos[0] + "," + pos[1] + "\n");
 
     }
     public abstract void start();

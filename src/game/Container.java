@@ -15,21 +15,21 @@ public class Container {
     {
         Runtime rt = Runtime.instance();
         Profile p2 = new ProfileImpl();
+        p2.setParameter(Profile.CONTAINER_NAME, "PlayersContainer");
         p2.setParameter(Profile.GUI,"true");
         container = rt.createAgentContainer(p2);
     }
 
     /**
      *
-     * @return Returns AgentController is accepts a new agent or null otherwise
      */
-    public AgentController addAgent(String name, String agentType)
+    void addAgent(String name, String agentType)
     {
         try {
             Object[] agentArgs = new Object[0];
-            return container.createNewAgent(name, agentType, agentArgs);
+            AgentController pc = container.createNewAgent(name, agentType, agentArgs);
+            pc.start();
         } catch (StaleProxyException e) {
-            return null;
         }
     }
 }
