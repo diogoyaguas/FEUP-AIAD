@@ -1,6 +1,7 @@
 package agents;
 
 import game.board.Board;
+import game.gui.GameGUI;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -17,6 +18,8 @@ import java.util.Queue;
 
 public class GameController extends Agent {
 
+    private GameGUI gui;
+
     private Board board;
     private Queue<AID> turns;
 
@@ -24,6 +27,9 @@ public class GameController extends Agent {
     {
         turns = new LinkedList<>();
         board = new Board(10, 10);
+
+        gui = new GameGUI();
+        gui.setBoard(board);
 
         DFAgentDescription dfd = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
