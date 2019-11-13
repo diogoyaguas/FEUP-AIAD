@@ -29,7 +29,7 @@ public class Container {
             Object[] agentArgs = new Object[0];
             AgentController pc = container.createNewAgent(name, agentType, agentArgs);
             pc.start();
-        } catch (StaleProxyException e) {
+        } catch (StaleProxyException ignored) {
         }
     }
 }
