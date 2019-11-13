@@ -53,6 +53,7 @@ public class GameController extends Agent {
                                 ServiceDescription sd = (ServiceDescription) it.next();
                                 if (sd.getType().equals("player")) {
                                     System.out.println("Agent " + getLocalName() + ": " + player.getName() + " joined");
+                                    addActionGUI(player.getName() + " joined");
                                     turns.add(player);
                                     setupPlayer(player);
                                     break;
@@ -75,6 +76,13 @@ public class GameController extends Agent {
         msg.setContent("Init " + pos[0] + " " + pos[1]);
         System.out.println("Agent " + getLocalName() + ": " + player.getName() + " - " + pos[0] + "," + pos[1]);
         send(msg);
+        board.setCityOwner(pos[0], pos[1], player);
+        gui.setBoard(board);
+    }
+
+    private void addActionGUI(String msg) {
+        if(gui != null)
+            gui.addAction(msg);
     }
 
     public void takedown()

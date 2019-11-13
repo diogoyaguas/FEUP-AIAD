@@ -1,12 +1,13 @@
 package game.board;
 
 import agents.GameAgent;
+import jade.core.AID;
 
 import java.util.HashMap;
 
 public class City {
 
-    private GameAgent owner;
+    private AID owner;
 
     private static int maximum_level = 10;
 
@@ -17,13 +18,13 @@ public class City {
 
     private int convertion_rate; //pode não ser util
     private int owner_religion;
-    private HashMap<GameAgent, Integer> religion_attacker;
+    private HashMap<AID, Integer> religion_attacker;
 
     private int defences;
 
     private int city_price;
 
-    public City(GameAgent owner) {
+    public City(AID owner) {
         this.owner=owner;
         this.reset();
     }
@@ -56,16 +57,16 @@ public class City {
         amount_money_producing = 5;
         amount_on_upgrade = 0;
         owner_religion = 100;
-        religion_attacker = new HashMap<GameAgent, Integer>();
+        religion_attacker = new HashMap<AID, Integer>();
         defences = 0;
         city_price=50;
     }
 
-    public void convertCity(GameAgent new_owner)
+    public void convertCity(AID new_owner)
     {
         this.owner=new_owner;
         owner_religion = 100;
-        religion_attacker = new HashMap<GameAgent, Integer>();
+        religion_attacker = new HashMap<AID, Integer>();
     }
 
     public int getCurrentLeve() {
@@ -84,12 +85,12 @@ public class City {
         return this.defences;
     }
 
-    public GameAgent getOwner()
+    public AID getOwner()
     {
         return this.owner;
     }
 
-    public void setOwner(GameAgent new_owner)
+    public void setOwner(AID new_owner)
     {
         this.owner=new_owner;
     }

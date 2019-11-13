@@ -14,11 +14,10 @@ public class GameGUI {
     private JFrame frame;
     private BoardPanel boardPanel;
     private JScrollPane scrollPane;
-    private ArrayList<String> actions;
+    private JPanel panel;
+    private JList list;
 
     public GameGUI() {
-        actions = new ArrayList<>();
-        for(int i = 0; i < 100; i++ ) actions.add("Teste " + i);
         initialize();
     }
 
@@ -30,13 +29,13 @@ public class GameGUI {
         frame.setResizable(false);
         frame.setVisible(true);
 
-        JPanel panel = new JPanel();
+        panel = new JPanel();
         panel.setLayout(new GridLayout(1,2));
         frame.add(panel);
 
         boardPanel = new BoardPanel();
 
-        JList list = new JList(actions.toArray());
+        list = new JList(new DefaultListModel<String>());
         scrollPane = new JScrollPane(list);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -52,6 +51,6 @@ public class GameGUI {
     }
 
     public void addAction(String a) {
-        actions.add(a);
+        ((DefaultListModel)list.getModel()).add(0, a);
     }
 }

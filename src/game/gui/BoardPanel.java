@@ -26,7 +26,7 @@ public class BoardPanel extends Canvas {
         int x = 0, y = 0;
         for(int i = 0; i < board.getHeight(); i++) {
             for(int j = 0; j < board.getWidth(); j++) {
-                g.setColor(new Color((int)(Math.random() * 0x1000000)));
+                g.setColor(board.getColor(i,j));
                 g.fillRect(x, y, addx, addy);
                 x+=addx;
             }
