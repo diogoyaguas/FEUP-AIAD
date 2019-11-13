@@ -31,6 +31,7 @@ public class Board {
     }
 
     public City getCity(int x, int y) {
+        if(x<0 || y<0 || x>=width || y>=height) return null;
         return this.board.get(x).get(y);
     }
 

@@ -11,8 +11,7 @@ public abstract class GameAgent extends Agent {
 
     private int[] pos;
 
-    public void setup()
-    {
+    public void setup() {
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -35,9 +34,12 @@ public abstract class GameAgent extends Agent {
             }
         }
 
-        System.out.println("Agent " + getName() + ": Coords " + pos[0] + "," + pos[1] + "\n");
+//        System.out.println("Agent " + getName() + ": Coords " + pos[0] + "," + pos[1] + "\n");
 
     }
+
+
+
     public abstract void start();
     public abstract void takeDown();
 }
