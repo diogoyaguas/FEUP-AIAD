@@ -1,10 +1,6 @@
 package game;
 
-import jade.core.Profile;
-import jade.core.ProfileImpl;
-import jade.core.Runtime;
 import jade.wrapper.AgentController;
-import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
@@ -18,12 +14,14 @@ public class Game {
     private AgentController game_controller;
     private Container game_container;
     private ArrayList<AgentController> players;
+    private int player_amount=3;
 
     /**
      * Creates a new game. Doesn't start it
      */
     public Game()
     {
+        player_amount=this.readPlayerCount();
         main_container = new MainContainer();
         game_container = new Container("PlayersContainer");
         players = new ArrayList<>();
@@ -31,7 +29,7 @@ public class Game {
 
             sniffer = main_container.createAgent("Sniffer", "jade.tools.sniffer.Sniffer");
             sniffer.start();
-            game_controller = main_container.createAgent("GameController","agents.GameController");
+            game_controller = main_container.createAgent("GameController","agents.GameController",player_amount);
             game_controller.start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
@@ -39,10 +37,7 @@ public class Game {
         }
     }
 
-    /**
-     * Start the game by creating new agents. Doesn't start agents
-     */
-    public void start()
+    private int readPlayerCount()
     {
         Scanner number = new Scanner( System.in );
         System.out.print( "Enter number of players: (Maximum: 10)\n:::" );
@@ -51,7 +46,15 @@ public class Game {
             System.out.print( "Enter valid number of players: (Maximum: 10)\n::: " );
             players = number.nextInt();
         }
-        this.addAgents(players);
+        return players;
+    }
+
+    /**
+     * Start the game by creating new agents. Doesn't start agents
+     */
+    public void start()
+    {
+        this.addAgents(player_amount);
         this.startAgents();
     }
 

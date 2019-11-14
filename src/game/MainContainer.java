@@ -38,4 +38,9 @@ public class MainContainer {
         Object[] args = new Object[0];
         return mainContainer.createNewAgent(name, className, args);
     }
+    public AgentController createAgent(String name,String className,int player_amount) throws StaleProxyException {
+        Object[] args = new Object[1];
+        args[0] = player_amount;
+        return mainContainer.createNewAgent(name, className, args);
+    }
 }

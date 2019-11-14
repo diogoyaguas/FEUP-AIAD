@@ -17,8 +17,8 @@ public class Coordinate {
         this.y = Integer.parseInt(c[1]);
     }
 
-    public int x() {return x;}
-    public int y() {return y;}
+    public int getX() {return x;}
+    public int getY() {return y;}
 
     @Override
     public boolean equals(Object o) {
