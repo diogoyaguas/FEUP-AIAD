@@ -7,19 +7,16 @@ import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.FSMBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.SearchConstraints;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.domain.FIPAAgentManagement.*;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
+import jade.proto.AchieveREResponder;
 import jade.proto.SubscriptionInitiator;
 import jade.util.leap.Iterator;
 
-import java.io.IOException;
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -143,27 +140,47 @@ public class GameController extends Agent {
             ACLMessage req = receive(MessageTemplate
                     .and(MessageTemplate.not(MessageTemplate.MatchSender(getDefaultDF())),
                             MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-                                    MessageTemplate.MatchPerformative(ACLMessage.REQUEST)))
-            );
+                                    MessageTemplate.MatchPerformative(ACLMessage.REQUEST))));
             if(req == null) return;
 
-            String[] content = req.getContent().split(" ");
+            System.out.println("Agent "+getLocalName()+": " + req.getPerformative() + " received from "+req.getSender().getName()+". Action is "+req.getContent());
+
+            String[] param = req.getContent().split(" ");
             AID p = req.getSender();
-            if(content[0].equals("Update") && req.getPerformative() == ACLMessage.INFORM) {
+            if(param[0].equals("Update") && req.getPerformative() == ACLMessage.INFORM) {
                 end = true;
-            } else if (content[0].equals("Which") && req.getPerformative() == ACLMessage.REQUEST){
-                City c = board.getCity(Integer.parseInt(content[1]), Integer.parseInt(content[2]));
-                if(c == null) {
-                    msg(p, "Out_of_Boundary", ACLMessage.INFORM);
-                    return;
-                }
-                AID owner = c.getOwner();
-                if(owner == null) {
-                    msg(p, "Empty", ACLMessage.INFORM);
-                } else {
-                    msg(p, owner.toString(), ACLMessage.INFORM);
-                }
+                return;
             }
+
+
+            ACLMessage inform = req.createReply();
+            inform.setPerformative(ACLMessage.INFORM);
+            String res = "";
+
+            String[] content = req.getContent().split("\\|");
+            for(int i = 1; i < content.length; i++) {
+                String[] coords = content[i].split("_");
+                int x = Integer.parseInt(coords[0]);
+                int y = Integer.parseInt(coords[1]);
+                City c = board.getCity(x,y);
+                String value;
+
+                if(c == null) value = "Null";
+
+                else {
+                    AID owner = c.getOwner();
+                    if(owner == null) value = "Empty";
+                    else value = owner.toString();
+                }
+
+                if(res.length() == 0) res += value;
+                else res += "|" + value;
+            }
+
+            inform.setContent(res);
+            send(inform);
+            System.out.println("Agent "+getLocalName()+": INFORM sent to "+req.getSender().getName() + ", " + res);
+
         }
 
         @Override

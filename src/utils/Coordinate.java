@@ -11,6 +11,12 @@ public class Coordinate {
         this.y = y;
     }
 
+    public Coordinate(String xy) {
+        String[] c = xy.split("_");
+        this.x = Integer.parseInt(c[0]);
+        this.y = Integer.parseInt(c[1]);
+    }
+
     public int x() {return x;}
     public int y() {return y;}
 
@@ -30,5 +36,10 @@ public class Coordinate {
         ret.add(new Coordinate(x,y-1));
         ret.add(new Coordinate(x,y+1));
         return ret;
+    }
+
+    @Override
+    public String toString() {
+        return x + "_" + y;
     }
 }
