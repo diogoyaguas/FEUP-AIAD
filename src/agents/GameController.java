@@ -154,6 +154,7 @@ public class GameController extends Agent {
             String[] param = req.getContent().split(" ");
             AID p = req.getSender();
             if(param[0].equals("Update") && req.getPerformative() == ACLMessage.INFORM) {
+                // TODO: Update received, atualizar informações
                 end = true;
                 return;
             }

@@ -102,16 +102,19 @@ public abstract class GameAgent extends Agent {
             for(int i = 0; i < content.length; i++) {
                 int x = coordinates.get(i).getX();
                 int y = coordinates.get(i).getY();
+                // Espaço vazio
                 if(content[i].equals("Empty"))
                     System.out.println("Agent " + getAgent().getName() +
                             ": Position - " + x + "," + y + " is empty.");
+                // Espaço inválido
                 else if(content[i].equals("Null"))
                     System.out.println("Agent " + getAgent().getName() +
                             ": Position - " + x + "," + y + " doesn't exist.");
+                // Existe um jogador
                 else {
                     try {
                         StringACLCodec codec = new StringACLCodec(new StringReader(content[i]), null);
-                        AID opponent = codec.decodeAID();
+                        AID opponent = codec.decodeAID(); //jogador
                         System.out.println("Agent " + getAgent().getName() +
                                 ": Position - " + x + "," + y + " it's occupied by " +
                                 opponent.getName());
@@ -119,7 +122,12 @@ public abstract class GameAgent extends Agent {
                         e.printStackTrace();
                     }
                 }
+                // TODO: Guardar esta informação de quem são os vizinhos
             }
+
+            // TODO: implementar lógica especifica a cada tipo de jogador
+            // é possivel que se tenha de altera qualquer coisa porque o economist vai
+            // precisar de perguntar ao controller o preço da cidade
 
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);
