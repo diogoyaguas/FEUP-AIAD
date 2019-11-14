@@ -1,6 +1,7 @@
 package agents;
 
 import game.board.Board;
+import game.gui.GameGUI;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
@@ -17,6 +18,8 @@ import java.util.Queue;
 
 public class GameController extends Agent {
 
+    private GameGUI gui;
+
     private Board board;
     private Queue<AID> turns;
 
@@ -24,6 +27,9 @@ public class GameController extends Agent {
     {
         turns = new LinkedList<>();
         board = new Board(10, 10);
+
+        gui = new GameGUI();
+        gui.setBoard(board);
 
         DFAgentDescription dfd = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
@@ -33,13 +39,13 @@ public class GameController extends Agent {
         SearchConstraints sc = new SearchConstraints();
 
         addBehaviour(new SubscriptionInitiator(this, DFService.createSubscriptionMessage(this, getDefaultDF(), dfd, sc)) {
+
             protected void handleInform(ACLMessage inform) {
                 System.out.println("Agent " + getLocalName() + ": Notification received from DF");
                 try {
                     DFAgentDescription[] results = DFService.decodeNotification(inform.getContent());
                     if (results.length > 0) {
-                        for (int i = 0; i < results.length; ++i) {
-                            DFAgentDescription dfd = results[i];
+                        for (DFAgentDescription dfd : results) {
                             AID player = dfd.getName();
 
                             Iterator it = dfd.getAllServices();
@@ -47,6 +53,7 @@ public class GameController extends Agent {
                                 ServiceDescription sd = (ServiceDescription) it.next();
                                 if (sd.getType().equals("player")) {
                                     System.out.println("Agent " + getLocalName() + ": " + player.getName() + " joined");
+                                    addActionGUI(player.getName() + " joined");
                                     turns.add(player);
                                     setupPlayer(player);
                                     break;
@@ -69,6 +76,13 @@ public class GameController extends Agent {
         msg.setContent("Init " + pos[0] + " " + pos[1]);
         System.out.println("Agent " + getLocalName() + ": " + player.getName() + " - " + pos[0] + "," + pos[1]);
         send(msg);
+        board.setCityOwner(pos[0], pos[1], player);
+        gui.setBoard(board);
+    }
+
+    private void addActionGUI(String msg) {
+        if(gui != null)
+            gui.addAction(msg);
     }
 
     public void takedown()
