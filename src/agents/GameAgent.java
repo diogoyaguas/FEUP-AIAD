@@ -11,13 +11,14 @@ import jade.lang.acl.ACLCodec;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.StringACLCodec;
+import utils.Coordinate;
 
 import java.io.StringReader;
 import java.util.ArrayList;
 
 public abstract class GameAgent extends Agent {
 
-    private ArrayList<int[]> pos = new ArrayList<>();
+    private ArrayList<Coordinate> pos = new ArrayList<>();
     private AID controller;
 
 
@@ -40,10 +41,10 @@ public abstract class GameAgent extends Agent {
         controller = msg.getSender();
         String[] params = msg.getContent().split(" ");
         if (params[0].equals("Init")) {
-            pos.add(new int[]{Integer.parseInt(params[1]), Integer.parseInt(params[2])});
+            pos.add(new Coordinate(Integer.parseInt(params[1]), Integer.parseInt(params[2])));
         }
 
-        System.out.println("Agent " + getName() + ": Coords " + pos.get(0)[0] + "," + pos.get(0)[1] + "\n");
+        System.out.println("Agent " + getName() + ": Coords " + pos.get(0).x() + "," + pos.get(0).y() + "\n");
 
         addBehaviour(new ReceiveTurn());
 
@@ -60,17 +61,14 @@ public abstract class GameAgent extends Agent {
             ACLMessage msg = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
             if(msg.getContent().equals("Turn")) {
                 System.out.println("Agent " + getName() + ": My turn");
-                for (int[] position: pos) {
+                for (Coordinate position: pos) {
 
-                    int[][] neighbours = {
-                            {position[0]-1,position[1]},
-                            {position[0]+1,position[1]},
-                            {position[0],position[1]-1},
-                            {position[0],position[1]+1}};
+                    ArrayList<Coordinate> neighbours = position.adjacents();
 
-                    for (int i = 0; i < 4; i++) {
-                        int x = neighbours[i][0], y = neighbours[i][1];
+                    for (Coordinate neighbour : neighbours) {
+                        if(pos.contains(neighbour)) continue;
 
+                        int x = neighbour.x(), y = neighbour.y();
 
                         ACLMessage question = new ACLMessage(ACLMessage.REQUEST);
                         question.addReceiver(controller);
