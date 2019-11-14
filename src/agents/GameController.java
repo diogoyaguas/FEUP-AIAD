@@ -141,14 +141,15 @@ public class GameController extends Agent {
         @Override
         public void action() {
             ACLMessage req = receive(MessageTemplate
-                    .or(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-                    MessageTemplate.MatchPerformative(ACLMessage.REQUEST))
+                    .and(MessageTemplate.not(MessageTemplate.MatchSender(getDefaultDF())),
+                            MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+                                    MessageTemplate.MatchPerformative(ACLMessage.REQUEST)))
             );
             if(req == null) return;
 
             String[] content = req.getContent().split(" ");
             AID p = req.getSender();
-            if(content[0].equals("End_Query") && req.getPerformative() == ACLMessage.INFORM) {
+            if(content[0].equals("Update") && req.getPerformative() == ACLMessage.INFORM) {
                 end = true;
             } else if (content[0].equals("Which") && req.getPerformative() == ACLMessage.REQUEST){
                 City c = board.getCity(Integer.parseInt(content[1]), Integer.parseInt(content[2]));

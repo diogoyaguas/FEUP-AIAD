@@ -26,7 +26,7 @@ public class Game {
     {
         main_container = new MainContainer();
         game_container = new Container("PlayersContainer");
-        players = new ArrayList<AgentController>();
+        players = new ArrayList<>();
         try {
 
             sniffer = main_container.createAgent("Sniffer", "jade.tools.sniffer.Sniffer");
