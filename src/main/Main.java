@@ -4,6 +4,7 @@ import agents.GameController;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
+import jade.tools.sniffer.Sniffer;
 import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
@@ -23,6 +24,8 @@ public class Main{
 
         Object[] agentArgs = new Object[0];
         try {
+            AgentController s = mainContainer.createNewAgent("Sniffer", "jade.tools.sniffer.Sniffer", new Object[0]);
+            s.start();
             AgentController gc = mainContainer.createNewAgent("GameController","agents.GameController", agentArgs);
             gc.start();
 

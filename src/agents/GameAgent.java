@@ -32,14 +32,11 @@ public abstract class GameAgent extends Agent {
             e.printStackTrace();
         }
 
-        while (pos == null) {
-            ACLMessage msg = blockingReceive();
-            controller = msg.getSender();
-            String[] params = msg.getContent().split(" ");
-            if (params[0].equals("Init")) {
-                pos.add(new int[]{Integer.parseInt(params[1]), Integer.parseInt(params[2])});
-                break;
-            }
+        ACLMessage msg = blockingReceive();
+        controller = msg.getSender();
+        String[] params = msg.getContent().split(" ");
+        if (params[0].equals("Init")) {
+            pos.add(new int[]{Integer.parseInt(params[1]), Integer.parseInt(params[2])});
         }
 
         System.out.println("Agent " + getName() + ": Coords " + pos.get(0)[0] + "," + pos.get(0)[1] + "\n");
