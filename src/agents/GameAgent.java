@@ -121,6 +121,10 @@ public abstract class GameAgent extends Agent {
                 }
             }
 
+            //TODO: implementar lógica especifica a cada tipo de jogador
+            // é possivel que se tenha de altera qualquer coisa porque o economist vai
+            // precisar de perguntar ao controller o preço da cidade
+
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);
             msg.setContent("Update");
