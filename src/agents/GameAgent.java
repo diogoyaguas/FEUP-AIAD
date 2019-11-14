@@ -13,6 +13,7 @@ public abstract class GameAgent extends Agent {
 
     public void setup()
     {
+        System.out.println("Setting up agent");
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();

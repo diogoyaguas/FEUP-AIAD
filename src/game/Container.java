@@ -21,7 +21,7 @@ public class Container {
 
     /**
      *
-     * @return Returns AgentController is accepts a new agent or null otherwise
+     * @return Returns AgentController if accepts a new agent or null otherwise
      */
     public AgentController addAgent(String name, String agentType)
     {
