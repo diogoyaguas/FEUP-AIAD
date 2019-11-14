@@ -18,7 +18,9 @@ public abstract class GameAgent extends Agent {
     private ArrayList<int[]> pos = new ArrayList<>();
     private AID controller;
 
+
     public void setup() {
+        System.out.println("Setting up agent");
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();

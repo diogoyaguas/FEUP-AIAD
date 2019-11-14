@@ -19,10 +19,7 @@ public class Container {
         p2.setParameter(Profile.GUI,"true");
         container = rt.createAgentContainer(p2);
     }
-
-    /**
-     *
-     */
+    
     void addAgent(String name, String agentType)
     {
         try {
