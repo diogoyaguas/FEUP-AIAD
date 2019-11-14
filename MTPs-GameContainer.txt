@@ -1,1 +1,1 @@
-http://localhost:7778/acc
+http://tripor-Lenovo-ideapad-500S-13ISK:7778/acc
