@@ -3,14 +3,17 @@ package agents;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.lang.acl.ACLCodec;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.StringACLCodec;
+import jade.proto.AchieveREInitiator;
 import utils.Coordinate;
 
 import java.io.StringReader;
@@ -57,41 +60,82 @@ public abstract class GameAgent extends Agent {
 
         @Override
         public void action() {
-            ACLMessage msg = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
-            if(msg.getContent().equals("Turn")) {
-                System.out.println("Agent " + getName() + ": My turn");
-                for (Coordinate position: pos) {
+            ACLMessage turn = receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+            if(turn == null) return;
+            if(turn.getContent().equals("Turn")) {
+                handleTurn();
+            }
+        }
 
-                    ArrayList<Coordinate> neighbours = position.adjacents();
-
-                    for (Coordinate neighbour : neighbours) {
-                        if(pos.contains(neighbour)) continue;
-
-                        int x = neighbour.getX(), y = neighbour.getY();
-
-                        ACLMessage question = new ACLMessage(ACLMessage.REQUEST);
-                        question.addReceiver(controller);
-                        question.setContent("Which " + x + " " + y);
-                        send(question);
-
-                        ACLMessage response = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
-                        if(!response.getContent().equals("Out_of_Boundary")) {
-                            if(response.getContent().equals("Empty")) {
-                                System.out.println("Agent " + getName() + ": Position - " + x + "," + y + " it's empty.");
-                            } else {
-                                try {
-                                    StringACLCodec codec = new StringACLCodec(new StringReader(response.getContent()), null);
-                                    AID opponent = codec.decodeAID();
-                                    System.out.println("Agent " + getName() + ": Position - " + x + "," + y + " it's occupied.");
-                                } catch (ACLCodec.CodecException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-
+        private void handleTurn() {
+            System.out.println("Agent " + getName() + ": My turn");
+            ArrayList<Coordinate> coordinates = new ArrayList();
+            String ret = "Which";
+            for (Coordinate position: pos) {
+                ArrayList<Coordinate> neighbours = position.adjacents();
+                for(Coordinate n : neighbours) {
+                    if(pos.contains(n)) continue;
+                    coordinates.add(n);
+                    ret += "|" + n;
                 }
             }
+
+            ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
+            msg.addReceiver(controller);
+            msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
+            msg.setContent(ret);
+            send(msg);
+
+            System.out.println("Agent " + getAgent().getName() +
+                    ": Request Sent, " + msg.getContent());
+
+            ACLMessage inform = blockingReceive(MessageTemplate.and(
+                    MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+                    MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST)));
+
+
+            System.out.println("Agent " + getAgent().getName() +
+                    ": Inform Received, " + inform.getContent());
+
+            String[] content = inform.getContent().split("\\|");
+            for(int i = 0; i < content.length; i++) {
+                int x = coordinates.get(i).getX();
+                int y = coordinates.get(i).getY();
+                // Espaço vazio
+                if(content[i].equals("Empty"))
+                    System.out.println("Agent " + getAgent().getName() +
+                            ": Position - " + x + "," + y + " is empty.");
+                // Espaço inválido
+                else if(content[i].equals("Null"))
+                    System.out.println("Agent " + getAgent().getName() +
+                            ": Position - " + x + "," + y + " doesn't exist.");
+                // Existe um jogador
+                else {
+                    try {
+                        StringACLCodec codec = new StringACLCodec(new StringReader(content[i]), null);
+                        AID opponent = codec.decodeAID(); //jogador
+                        System.out.println("Agent " + getAgent().getName() +
+                                ": Position - " + x + "," + y + " it's occupied by " +
+                                opponent.getName());
+                    } catch (ACLCodec.CodecException e) {
+                        e.printStackTrace();
+                    }
+                }
+                // TODO: Guardar esta informação de quem são os vizinhos
+            }
+
+            // TODO: implementar lógica especifica a cada tipo de jogador
+            // é possivel que se tenha de altera qualquer coisa porque o economist vai
+            // precisar de perguntar ao controller o preço da cidade
+
+            msg = new ACLMessage(ACLMessage.INFORM);
+            msg.addReceiver(controller);
+            msg.setContent("Update");
+            send(msg);
+
+            System.out.println("Agent " + getAgent().getName() +
+                    ": Update Sent");
+
         }
     }
 }
