@@ -33,7 +33,13 @@ public class GameController extends Agent {
     private Board board;
     private Queue<AID> turns;
 
+    private int agent_amount;
+
+
+
     public void setup() {
+        Object[] args = getArguments();
+        agent_amount = (Integer) args[0];
         turns = new LinkedList<>();
         board = new Board(10, 10);
 
@@ -119,7 +125,7 @@ public class GameController extends Agent {
 
         @Override
         public void action() {
-            if(turns.size() < 2) return;
+            if(turns.size() != agent_amount) return;
             AID p = turns.remove();
             System.out.println("Agent " + getLocalName() + ": " + p.getName() + " Turn");
             addActionGUI(p.getName() + " Turn");

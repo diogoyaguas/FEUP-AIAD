@@ -21,7 +21,6 @@ public abstract class GameAgent extends Agent {
     private ArrayList<Coordinate> pos = new ArrayList<>();
     private AID controller;
 
-
     public void setup() {
         System.out.println("Setting up agent");
         DFAgentDescription dfd = new DFAgentDescription();
@@ -44,7 +43,7 @@ public abstract class GameAgent extends Agent {
             pos.add(new Coordinate(Integer.parseInt(params[1]), Integer.parseInt(params[2])));
         }
 
-        System.out.println("Agent " + getName() + ": Coords " + pos.get(0).x() + "," + pos.get(0).y() + "\n");
+        System.out.println("Agent " + getName() + ": Coords " + pos.get(0).getX() + "," + pos.get(0).getY() + "\n");
 
         addBehaviour(new ReceiveTurn());
 
@@ -68,7 +67,7 @@ public abstract class GameAgent extends Agent {
                     for (Coordinate neighbour : neighbours) {
                         if(pos.contains(neighbour)) continue;
 
-                        int x = neighbour.x(), y = neighbour.y();
+                        int x = neighbour.getX(), y = neighbour.getY();
 
                         ACLMessage question = new ACLMessage(ACLMessage.REQUEST);
                         question.addReceiver(controller);

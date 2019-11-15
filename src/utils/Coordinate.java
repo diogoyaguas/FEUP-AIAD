@@ -11,8 +11,8 @@ public class Coordinate {
         this.y = y;
     }
 
-    public int x() {return x;}
-    public int y() {return y;}
+    public int getX() {return x;}
+    public int getY() {return y;}
 
     @Override
     public boolean equals(Object o) {
