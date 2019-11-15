@@ -21,11 +21,13 @@ public class Container {
         container = rt.createAgentContainer(p2);
     }
 
-    public AgentController addAgent(String name, String agentType)
+    public AgentController addAgent(String name, String agentType, int width,int height)
     {
         try {
-            Object[] agentArgs = new Object[0];
-            return container.createNewAgent(name, agentType, agentArgs);
+            Object[] args = new Object[2];
+            args[0] = width;
+            args[1] = height;
+            return container.createNewAgent(name, agentType, args);
         } catch (StaleProxyException ignored) {
             return null;
         }

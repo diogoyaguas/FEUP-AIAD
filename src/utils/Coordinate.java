@@ -19,6 +19,26 @@ public class Coordinate {
 
     public int getX() {return x;}
     public int getY() {return y;}
+    public Coordinate getTop(int width,int height)
+    {
+        if(y-1<0)return null;
+        return new Coordinate(x,y-1);
+    }
+    public Coordinate getButtom(int width,int height)
+    {
+        if(y+1>=height)return null;
+        return new Coordinate(x,y+1);
+    }
+    public Coordinate getLeft(int width,int height)
+    {
+        if(x-1<0)return null;
+        return new Coordinate(x-1,y);
+    }
+    public Coordinate getRight(int width,int height)
+    {
+        if(x+1>=width)return null;
+        return new Coordinate(x+1,y);
+    }
 
     @Override
     public boolean equals(Object o) {

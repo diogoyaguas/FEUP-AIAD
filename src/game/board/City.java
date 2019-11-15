@@ -2,12 +2,14 @@ package game.board;
 
 import agents.GameAgent;
 import jade.core.AID;
+import utils.Coordinate;
 
 import java.util.HashMap;
 
 public class City {
 
     private AID owner;
+    private Coordinate my_cords;
 
     private static int maximum_level = 10;
 
@@ -24,7 +26,8 @@ public class City {
 
     private int city_price;
 
-    public City(AID owner) {
+    public City(AID owner,Coordinate cord) {
+        this.my_cords=cord;
         this.owner=owner;
         this.reset();
     }

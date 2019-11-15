@@ -10,7 +10,4 @@ public class MilitaryAgent extends GameAgent {
         //System.out.println(Game.singleton);
     }
 
-    public void takeDown() {
-        System.out.println("Exiting");
-    }
 }

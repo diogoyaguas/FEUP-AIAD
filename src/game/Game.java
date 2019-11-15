@@ -15,13 +15,15 @@ public class Game {
     private Container game_container;
     private ArrayList<AgentController> players;
     private int player_amount=3;
+    private int width;
+    private int height;
 
     /**
      * Creates a new game. Doesn't start it
      */
     public Game()
     {
-        player_amount=this.readPlayerCount();
+        this.readPlayerInput();
         main_container = new MainContainer();
         game_container = new Container("PlayersContainer");
         players = new ArrayList<>();
@@ -29,7 +31,7 @@ public class Game {
 
             sniffer = main_container.createAgent("Sniffer", "jade.tools.sniffer.Sniffer");
             sniffer.start();
-            game_controller = main_container.createAgent("GameController","agents.GameController",player_amount);
+            game_controller = main_container.createAgent("GameController","agents.GameController",player_amount,width,height);
             game_controller.start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
@@ -37,7 +39,10 @@ public class Game {
         }
     }
 
-    private int readPlayerCount()
+    /**
+     * Reads the user desired number of player, width and height
+     */
+    private void readPlayerInput()
     {
         Scanner number = new Scanner( System.in );
         System.out.print( "Enter number of players: (Maximum: 10)\n:::" );
@@ -46,7 +51,14 @@ public class Game {
             System.out.print( "Enter valid number of players: (Maximum: 10)\n::: " );
             players = number.nextInt();
         }
-        return players;
+        this.player_amount=players;
+        System.out.print( "Enter the size of the map (width height): \n:::" );
+        int width = number.nextInt();
+        int height = number.nextInt();
+
+        this.width=width;
+        this.height=height;
+        //TODO: verificar se os números lidos são números
     }
 
     /**
@@ -65,7 +77,7 @@ public class Game {
     private void addAgents(int numberPlayers) {
         int counter = 0;
         while (counter < numberPlayers) {
-            AgentController agent = game_container.addAgent("Player" + ++counter, getRandomPlayerType());
+            AgentController agent = game_container.addAgent("Player" + ++counter, getRandomPlayerType(),width,height);
             if(agent!=null)
             {
                 players.add(agent);

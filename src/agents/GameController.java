@@ -37,8 +37,10 @@ public class GameController extends Agent {
     public void setup() {
         Object[] args = getArguments();
         agent_amount = (Integer) args[0];
+        int width = (int) args[1];
+        int height= (int) args[2];
         turns = new LinkedList<>();
-        board = new Board(10, 10);
+        board = new Board(width, height);
 
         gui = new GameGUI();
         gui.setBoard(board);

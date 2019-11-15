@@ -1,5 +1,6 @@
 package agents;
 
+import game.board.City;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
@@ -23,61 +24,90 @@ public abstract class GameAgent extends Agent {
 
     private ArrayList<Coordinate> pos = new ArrayList<>();
     private AID controller;
+    protected int width;
+    protected int height;
+    protected ArrayList<City> my_cities;
 
+    private ArrayList<Coordinate> interactable_coordinates;
+
+    /**
+     * Creates the agent and receives a coordinate for the starting position
+     */
     public void setup() {
+        Object[] args = getArguments();
         System.out.println("Setting up agent");
+        this.width = (int) args[0];
+        this.height =(int) args[1];
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
         sd.setName("GameAgent");
         sd.setType("player");
         dfd.addServices(sd);
-
         try {
             DFService.register(this, dfd);
         } catch (FIPAException e) {
             e.printStackTrace();
         }
-
         ACLMessage msg = blockingReceive();
         controller = msg.getSender();
         String[] params = msg.getContent().split(" ");
         if (params[0].equals("Init")) {
             pos.add(new Coordinate(Integer.parseInt(params[1]), Integer.parseInt(params[2])));
         }
-
         System.out.println("Agent " + getName() + ": Coords " + pos.get(0).getX() + "," + pos.get(0).getY() + "\n");
 
-        addBehaviour(new ReceiveTurn());
+        setInteractable_coordinates();
+        setMy_cities();
 
+        addBehaviour(new ReceiveTurn());
+    }
+
+    private void setInteractable_coordinates()
+    {
+        this.interactable_coordinates = new ArrayList<Coordinate>();
+        for (Coordinate cord: this.pos) {
+            Coordinate adicionar = cord.getTop(this.width,this.height);
+            if(adicionar!=null && !this.interactable_coordinates.contains(adicionar))this.interactable_coordinates.add(adicionar);
+            adicionar = cord.getButtom(this.width,this.height);
+            if(adicionar!=null && !this.interactable_coordinates.contains(adicionar))this.interactable_coordinates.add(adicionar);
+            adicionar = cord.getLeft(this.width,this.height);
+            if(adicionar!=null && !this.interactable_coordinates.contains(adicionar))this.interactable_coordinates.add(adicionar);
+            adicionar = cord.getRight(this.width,this.height);
+            if(adicionar!=null && !this.interactable_coordinates.contains(adicionar))this.interactable_coordinates.add(adicionar);
+        }
+    }
+    private void setMy_cities()
+    {
+        this.my_cities=new ArrayList<>();
+        for(Coordinate cord:this.pos)
+        {
+            this.my_cities.add(new City(this.getAID(),cord));
+        }
     }
 
     public abstract void start();
 
-    public abstract void takeDown();
+    public void takeDown() {
+        System.out.println("Exiting");
+    }
 
     private class ReceiveTurn extends CyclicBehaviour {
 
         @Override
         public void action() {
             ACLMessage turn = receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
-            if(turn == null) return;
-            if(turn.getContent().equals("Turn")) {
+            if (turn == null) return;
+            if (turn.getContent().equals("Turn")) {
                 handleTurn();
             }
         }
 
         private void handleTurn() {
             System.out.println("Agent " + getName() + ": My turn");
-            ArrayList<Coordinate> coordinates = new ArrayList();
             String ret = "Which";
-            for (Coordinate position: pos) {
-                ArrayList<Coordinate> neighbours = position.adjacents();
-                for(Coordinate n : neighbours) {
-                    if(pos.contains(n)) continue;
-                    coordinates.add(n);
-                    ret += "|" + n;
-                }
+            for (Coordinate cord : interactable_coordinates) {
+                ret += "|" + cord;
             }
 
             ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
@@ -98,18 +128,18 @@ public abstract class GameAgent extends Agent {
                     ": Inform Received, " + inform.getContent());
 
             String[] content = inform.getContent().split("\\|");
-            for(int i = 0; i < content.length; i++) {
-                int x = coordinates.get(i).getX();
-                int y = coordinates.get(i).getY();
+            for (int i = 0; i < content.length; i++) {
+                int x = interactable_coordinates.get(i).getX();
+                int y = interactable_coordinates.get(i).getY();
                 // Espaço vazio
-                if(content[i].equals("Empty"))
+                if (content[i].equals("Empty"))
                     System.out.println("Agent " + getAgent().getName() +
                             ": Position - " + x + "," + y + " is empty.");
-                // Espaço inválido
-                else if(content[i].equals("Null"))
+                    // Espaço inválido
+                else if (content[i].equals("Null"))
                     System.out.println("Agent " + getAgent().getName() +
                             ": Position - " + x + "," + y + " doesn't exist.");
-                // Existe um jogador
+                    // Existe um jogador
                 else {
                     try {
                         StringACLCodec codec = new StringACLCodec(new StringReader(content[i]), null);
