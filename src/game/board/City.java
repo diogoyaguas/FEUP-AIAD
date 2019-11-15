@@ -6,6 +6,7 @@ import utils.Coordinate;
 
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class City implements Comparator {
 
@@ -113,8 +114,24 @@ public class City implements Comparator {
             this.my_religion+=percentage;
             if (this.my_religion>=100)
             {
+                this.religion_attacker=new HashMap<>();
                 this.my_religion=100;
                 return true;
+            }
+            int attackers_quantity=this.religion_attacker.size();
+            int amount_to_reduce=percentage;
+            Iterator it = this.religion_attacker.entrySet().iterator();
+            while(it.hasNext())
+            {
+                HashMap.Entry pair=(HashMap.Entry)it.next();
+                AID id=(AID)pair.getKey();
+                int retirar=amount_to_reduce;
+                if(this.religion_attacker.get(id)<amount_to_reduce)
+                    retirar=this.religion_attacker.get(id);
+                amount_to_reduce-=retirar;
+                this.religion_attacker.put(id,((int)pair.getValue())-retirar);
+                it.remove();
+                if(amount_to_reduce<=0)break;
             }
         }
         else
@@ -124,6 +141,7 @@ public class City implements Comparator {
                 new_amount=100;
             }
             this.religion_attacker.put(changer,new_amount);
+            this.my_religion-=percentage;
             if(new_amount==100)
                 return true;
         }

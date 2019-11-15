@@ -110,6 +110,7 @@ public abstract class GameAgent extends Agent {
         //TODO avisar o controller e o agent que comprei a cidade dele
     }
 
+
     private class ReceiveTurn extends CyclicBehaviour {
 
         @Override
@@ -171,7 +172,7 @@ public abstract class GameAgent extends Agent {
                                 ": Position - " + x + "," + y + " it's occupied by " +
                                 opponent.getName());
                         City opponent_city = new City(opponent,new Coordinate(x,y));
-                        //TODO é preciso mais informação sobre a cidade
+                        //TODO é preciso mais informação sobre a cidade, costo da cidade, religião que eu tenho agora
                         interactable_cities.add(opponent_city);
                     } catch (ACLCodec.CodecException e) {
                         e.printStackTrace();
