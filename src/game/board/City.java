@@ -4,9 +4,10 @@ import agents.GameAgent;
 import jade.core.AID;
 import utils.Coordinate;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
-public class City {
+public class City implements Comparator {
 
     private AID owner;
     private Coordinate my_cords;
@@ -19,16 +20,16 @@ public class City {
     private int amount_money_producing;
 
     private int convertion_rate; //pode não ser util
-    private int owner_religion;
+    private int my_religion;
     private HashMap<AID, Integer> religion_attacker;
 
     private int defences;
 
     private int city_price;
 
-    public City(AID owner,Coordinate cord) {
-        this.my_cords=cord;
-        this.owner=owner;
+    public City(AID owner, Coordinate cord) {
+        this.my_cords = cord;
+        this.owner = owner;
         this.reset();
     }
 
@@ -50,7 +51,7 @@ public class City {
         this.amount_on_upgrade += this.cost_to_upgrade;
         this.cost_to_upgrade *= 2;
         this.amount_money_producing *= 2;
-        this.city_price= (int) Math.ceil(this.amount_on_upgrade*1.2);
+        this.city_price = (int) Math.ceil(this.amount_on_upgrade * 1.2);
         return true;
     }
 
@@ -59,17 +60,74 @@ public class City {
         cost_to_upgrade = 100;
         amount_money_producing = 5;
         amount_on_upgrade = 0;
-        owner_religion = 100;
+        my_religion = 100;
         religion_attacker = new HashMap<AID, Integer>();
         defences = 0;
-        city_price=50;
+        city_price = 150;
     }
 
-    public void convertCity(AID new_owner)
-    {
-        this.owner=new_owner;
-        owner_religion = 100;
+    public void convertCity(AID new_owner) {
+        this.owner = new_owner;
+        my_religion = 100;
         religion_attacker = new HashMap<AID, Integer>();
+    }
+
+    public int maximumReligionConvertionCost(AID changer)
+    {
+        int percent_not_owned=0;
+        if(changer==owner)
+        {
+            percent_not_owned=100-this.my_religion;
+            if(percent_not_owned>50)
+                percent_not_owned=50;
+            return percent_not_owned*5*((int)Math.ceil(this.getCity_price()*0.05));
+        }
+        else
+        {
+            percent_not_owned=100-this.religion_attacker.get(changer);
+            if(percent_not_owned>50)
+                percent_not_owned=50;
+            return percent_not_owned*5*((int)Math.ceil(this.getCity_price()*0.1));
+        }
+    }
+    public int maximumReligionConvertionPercentage(AID changer)
+    {
+        int percent_not_owned=0;
+        if(changer==owner)
+        {
+            percent_not_owned=100-this.my_religion;
+        }
+        else
+        {
+            percent_not_owned=100-this.religion_attacker.get(changer);
+        }
+        if(percent_not_owned>50)
+            percent_not_owned=50;
+        return percent_not_owned;
+    }
+
+    public Boolean changeReligionAmount(AID changer,int percentage)
+    {
+        if(changer==owner)
+        {
+            this.my_religion+=percentage;
+            if (this.my_religion>=100)
+            {
+                this.my_religion=100;
+                return true;
+            }
+        }
+        else
+        {
+            int new_amount = this.religion_attacker.get(changer) + percentage;
+            if(new_amount>=100){
+                new_amount=100;
+            }
+            this.religion_attacker.put(changer,new_amount);
+            if(new_amount==100)
+                return true;
+        }
+        return false;
     }
 
     public int getCurrentLeve() {
@@ -88,14 +146,25 @@ public class City {
         return this.defences;
     }
 
-    public AID getOwner()
-    {
+    public int getCity_price() {
+        return city_price;
+    }
+
+    public int getMy_religion() {
+        return my_religion;
+    }
+
+    public AID getOwner() {
         return this.owner;
     }
 
-    public void setOwner(AID new_owner)
-    {
-        this.owner=new_owner;
+    public void setOwner(AID new_owner) {
+        this.owner = new_owner;
     }
 
+
+    @Override
+    public int compare(Object o, Object t1) {
+        return 0;
+    }
 }

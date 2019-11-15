@@ -27,6 +27,9 @@ public abstract class GameAgent extends Agent {
     protected int width;
     protected int height;
     protected ArrayList<City> my_cities;
+    protected int current_money;
+    protected ArrayList<City> empty_cities;
+    protected ArrayList<City> interactable_cities;
 
     private ArrayList<Coordinate> interactable_coordinates;
 
@@ -35,6 +38,7 @@ public abstract class GameAgent extends Agent {
      */
     public void setup() {
         Object[] args = getArguments();
+        this.current_money=0;
         System.out.println("Setting up agent");
         this.width = (int) args[0];
         this.height =(int) args[1];
@@ -86,10 +90,24 @@ public abstract class GameAgent extends Agent {
         }
     }
 
-    public abstract void start();
+    private void getTurnMoney()
+    {
+        for(City city:this.my_cities)
+        {
+            this.current_money+=city.getMoneyProduced();
+        }
+    }
+
+
+    public abstract ArrayList<City> logic();
 
     public void takeDown() {
         System.out.println("Exiting");
+    }
+
+    protected void thisCityIsNowMine(City city)
+    {
+        //TODO avisar o controller e o agent que comprei a cidade dele
     }
 
     private class ReceiveTurn extends CyclicBehaviour {
@@ -104,6 +122,7 @@ public abstract class GameAgent extends Agent {
         }
 
         private void handleTurn() {
+            getTurnMoney();
             System.out.println("Agent " + getName() + ": My turn");
             String ret = "Which";
             for (Coordinate cord : interactable_coordinates) {
@@ -128,13 +147,17 @@ public abstract class GameAgent extends Agent {
                     ": Inform Received, " + inform.getContent());
 
             String[] content = inform.getContent().split("\\|");
+            empty_cities=new ArrayList<>();
+            interactable_cities=new ArrayList<>();
             for (int i = 0; i < content.length; i++) {
                 int x = interactable_coordinates.get(i).getX();
                 int y = interactable_coordinates.get(i).getY();
                 // Espaço vazio
-                if (content[i].equals("Empty"))
+                if (content[i].equals("Empty")) {
                     System.out.println("Agent " + getAgent().getName() +
                             ": Position - " + x + "," + y + " is empty.");
+                    empty_cities.add(new City(null,new Coordinate(x,y)));
+                }
                     // Espaço inválido
                 else if (content[i].equals("Null"))
                     System.out.println("Agent " + getAgent().getName() +
@@ -147,16 +170,19 @@ public abstract class GameAgent extends Agent {
                         System.out.println("Agent " + getAgent().getName() +
                                 ": Position - " + x + "," + y + " it's occupied by " +
                                 opponent.getName());
+                        City opponent_city = new City(opponent,new Coordinate(x,y));
+                        //TODO é preciso mais informação sobre a cidade
+                        interactable_cities.add(opponent_city);
                     } catch (ACLCodec.CodecException e) {
                         e.printStackTrace();
                     }
                 }
-                // TODO: Guardar esta informação de quem são os vizinhos
             }
 
             // TODO: implementar lógica especifica a cada tipo de jogador
             // é possivel que se tenha de altera qualquer coisa porque o economist vai
             // precisar de perguntar ao controller o preço da cidade
+            logic();
 
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);

@@ -1,13 +1,16 @@
 package agents.types;
 
 import agents.GameAgent;
+import game.board.City;
+
+import java.util.ArrayList;
 
 public class ReligiousAgent extends GameAgent {
 
     @Override
-    public void start() {
-        System.out.println("Religious Agent Hello with name :" + getLocalName());
-        //System.out.println(Game.singleton);
+    public ArrayList<City> logic() {
+        ArrayList<City> my_new_cities=new ArrayList<>();
+        return my_new_cities;
     }
 
 
