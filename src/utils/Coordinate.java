@@ -30,7 +30,7 @@ public class Coordinate {
         return new Coordinate(x, y - 1);
     }
 
-    public Coordinate getButtom(int width, int height) {
+    public Coordinate getButton(int width, int height) {
         if (y + 1 >= height) return null;
         return new Coordinate(x, y + 1);
     }

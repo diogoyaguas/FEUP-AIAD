@@ -115,10 +115,6 @@ public class GameController extends Agent {
         gui.setBoard(board);
     }
 
-    public void takedown() {
-
-    }
-
     private class TurnBehaviour extends Behaviour {
         private boolean end = false;
 
@@ -164,7 +160,7 @@ public class GameController extends Agent {
 
             ACLMessage inform = req.createReply();
             inform.setPerformative(ACLMessage.INFORM);
-            String res = "";
+            StringBuilder res = new StringBuilder();
 
             String[] content = req.getContent().split("\\|");
             for (int i = 1; i < content.length; i++) {
@@ -182,11 +178,11 @@ public class GameController extends Agent {
                     else value = owner.toString();
                 }
 
-                if (res.length() == 0) res += value;
-                else res += "|" + value;
+                if (res.length() == 0) res.append(value);
+                else res.append("|").append(value);
             }
 
-            inform.setContent(res);
+            inform.setContent(res.toString());
             send(inform);
             System.out.println("Agent " + getLocalName() + ": INFORM sent to " + req.getSender().getName() + ", " + res);
 

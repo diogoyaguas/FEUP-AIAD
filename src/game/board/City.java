@@ -4,7 +4,9 @@ import jade.core.AID;
 import javafx.util.Pair;
 import utils.Coordinate;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class City implements Comparable {
 
@@ -18,7 +20,6 @@ public class City implements Comparable {
     private int amount_on_upgrade;
     private int amount_money_producing;
 
-    private int convertion_rate; //pode não ser util
     private ArrayList<Pair<AID, Integer>> religion_attacker;
 
     private int defences;
@@ -27,23 +28,19 @@ public class City implements Comparable {
 
     /**
      * Calculates how much money a percentagem of this religion is worth
+     *
      * @param value The percentage I want to calculate
      * @return The amount of money this percentage costs
      */
-    public int costOfReligion(int value)
-    {
-         return ((int) Math.ceil(this.amount_on_upgrade * 2 / 100))*value;
+    public int costOfReligion(int value) {
+        return ((int) Math.ceil(this.amount_on_upgrade * 2 / 100)) * value;
     }
 
-    public void sortReligionAttackers()
-    {
-        Collections.sort(this.religion_attacker, new Comparator<Pair<AID, Integer>>() {
-            @Override
-            public int compare(final Pair<AID, Integer> o1, final Pair<AID, Integer> o2) {
-                if(o1.getValue() <= o2.getValue())
-                    return 1;
-                return 0;
-            }
+    public void sortReligionAttackers() {
+        this.religion_attacker.sort((o1, o2) -> {
+            if (o1.getValue() <= o2.getValue())
+                return 1;
+            return 0;
         });
     }
 
@@ -130,7 +127,7 @@ public class City implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        if(this.current_level<((City)o).current_level)
+        if (this.current_level < ((City) o).current_level)
             return 1;
         return 0;
     }

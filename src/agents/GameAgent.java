@@ -23,11 +23,11 @@ public abstract class GameAgent extends Agent {
 
     protected ArrayList<Coordinate> pos = new ArrayList<>();
     private AID controller;
-    protected int width;
-    protected int height;
+    private int width;
+    private int height;
     protected ArrayList<City> my_cities;
     protected int current_money;
-    protected ArrayList<City> empty_cities;
+    private ArrayList<City> empty_cities;
     protected ArrayList<City> interactable_cities;
 
     private ArrayList<Coordinate> interactable_coordinates;
@@ -67,12 +67,12 @@ public abstract class GameAgent extends Agent {
     }
 
     private void setInteractable_coordinates() {
-        this.interactable_coordinates = new ArrayList<Coordinate>();
+        this.interactable_coordinates = new ArrayList<>();
         for (Coordinate cord : this.pos) {
             Coordinate adicionar = cord.getTop(this.width, this.height);
             if (adicionar != null && !this.interactable_coordinates.contains(adicionar))
                 this.interactable_coordinates.add(adicionar);
-            adicionar = cord.getButtom(this.width, this.height);
+            adicionar = cord.getButton(this.width, this.height);
             if (adicionar != null && !this.interactable_coordinates.contains(adicionar))
                 this.interactable_coordinates.add(adicionar);
             adicionar = cord.getLeft(this.width, this.height);
@@ -97,20 +97,17 @@ public abstract class GameAgent extends Agent {
         }
     }
 
-
     public abstract ArrayList<City> logic();
 
     public void takeDown() {
         System.out.println("Exiting");
     }
 
-
-
     protected void thisCityIsNowMine(City city) {
         //TODO avisar o controller e o agent que comprei a cidade dele
     }
 
-    protected ArrayList<City> buyEmptyCities(ArrayList<City> new_cities ,int moneyToSpent) {
+    protected ArrayList<City> buyEmptyCities(ArrayList<City> new_cities, int moneyToSpent) {
         for (City empty : this.empty_cities) {
             System.out.println("Agent " + getName() + ": Getting a new city");
             if (moneyToSpent >= empty.getCity_price()) {
@@ -126,6 +123,7 @@ public abstract class GameAgent extends Agent {
 
     /**
      * Wasted all money upgrading evenly every city you own
+     *
      * @param moneyToDefenses The money I want to waste defending my cities
      */
     protected void upgradeMyDefenses(int moneyToDefenses) {
@@ -138,22 +136,20 @@ public abstract class GameAgent extends Agent {
 
     /**
      * Tries to defend all cities from religion attacks using the money given
+     *
      * @param money_to_waste The money used to defend cities against religion attacks
      * @return The money not wasted
      */
-    protected int defendReligion(int money_to_waste)
-    {
+    protected int defendReligion(int money_to_waste) {
         for (City my_city : this.my_cities) {
             my_city.sortReligionAttackers();
-            for(int i=0;i<my_city.getReligion_attacker().size();i++)
-            {
-                int current_amount=my_city.getReligion_attacker().get(i).getValue();
-                if(current_amount>=50)current_amount=50;
-                int cost= my_city.costOfReligion(current_amount);
-                if(money_to_waste>=cost)
-                {
-                    money_to_waste-=cost;
-                    my_city.getReligion_attacker().set(i,new Pair<AID, Integer>(my_city.getReligion_attacker().get(i).getKey(),my_city.getReligion_attacker().get(i).getValue()-current_amount));
+            for (int i = 0; i < my_city.getReligion_attacker().size(); i++) {
+                int current_amount = my_city.getReligion_attacker().get(i).getValue();
+                if (current_amount >= 50) current_amount = 50;
+                int cost = my_city.costOfReligion(current_amount);
+                if (money_to_waste >= cost) {
+                    money_to_waste -= cost;
+                    my_city.getReligion_attacker().set(i, new Pair<>(my_city.getReligion_attacker().get(i).getKey(), my_city.getReligion_attacker().get(i).getValue() - current_amount));
                 }
             }
         }
@@ -174,16 +170,16 @@ public abstract class GameAgent extends Agent {
         private void handleTurn() {
             getTurnMoney();
             System.out.println("Agent " + getName() + ": My turn");
-            String ret = "Which";
+            StringBuilder ret = new StringBuilder("Which");
             setInteractable_coordinates();
             for (Coordinate cord : interactable_coordinates) {
-                ret += "|" + cord;
+                ret.append("|").append(cord);
             }
 
             ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
             msg.addReceiver(controller);
             msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
-            msg.setContent(ret);
+            msg.setContent(ret.toString());
             send(msg);
 
             System.out.println("Agent " + getAgent().getName() +
@@ -233,7 +229,7 @@ public abstract class GameAgent extends Agent {
             // TODO: implementar lógica especifica a cada tipo de jogador
             // é possivel que se tenha de altera qualquer coisa porque o economist vai
             // precisar de perguntar ao controller o preço da cidade
-            logic();
+            ArrayList<City> new_cities = logic();
 
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);

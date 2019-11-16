@@ -19,7 +19,7 @@ public class Container {
         container = rt.createAgentContainer(p2);
     }
 
-    public AgentController addAgent(String name, String agentType, int width, int height) {
+    AgentController addAgent(String name, String agentType, int width, int height) {
         try {
             Object[] args = new Object[2];
             args[0] = width;
