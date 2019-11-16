@@ -121,6 +121,13 @@ public abstract class GameAgent extends Agent {
         return my_new_cities;
     }
 
+    protected void upgradeMyDefenses(int moneyToDefenses) {
+        int amountOfDefenses = moneyToDefenses / this.my_cities.size();
+        for (City my_cities: this.my_cities) {
+            my_cities.addDefences(amountOfDefenses);
+        }
+    }
+
     private class ReceiveTurn extends CyclicBehaviour {
 
         @Override
