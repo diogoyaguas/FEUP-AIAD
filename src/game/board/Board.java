@@ -1,6 +1,7 @@
 package game.board;
 
 import jade.core.AID;
+import utils.Coordinate;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class Board {
         for (int i = 0; i < width; i++) {
             board.add(new ArrayList<>());
             for (int j = 0; j < height; j++) {
-                board.get(i).add(new City(null));
+                board.get(i).add(new City(null, new Coordinate(i, j)));
             }
         }
     }

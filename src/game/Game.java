@@ -1,9 +1,11 @@
 package game;
 
+import com.sun.xml.internal.ws.util.StringUtils;
 import jade.wrapper.AgentController;
 import jade.wrapper.StaleProxyException;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -45,20 +47,36 @@ public class Game {
     private void readPlayerInput()
     {
         Scanner number = new Scanner( System.in );
-        System.out.print( "Enter number of players: (Maximum: 10)\n:::" );
-        int players = number.nextInt();
-        while(players >= 10 || (players <= 1)) {
-            System.out.print( "Enter valid number of players: (Maximum: 10)\n::: " );
-            players = number.nextInt();
+        System.out.print( "Enter number of players: (Maximum: 10)\n::: " );
+        String playersString = number.next();
+        while(!playersString.matches("^[0-9]+$")) {
+            System.out.print( "\nEnter valid number of players: (Maximum: 10)\n::: " );
+            playersString = number.next();
         }
-        this.player_amount=players;
-        System.out.print( "Enter the size of the map (width height): \n:::" );
-        int width = number.nextInt();
-        int height = number.nextInt();
+        int playersNumber = Integer.parseInt(playersString);
+        if(playersNumber > 10) {
+            System.out.println("\n<<< Invalid number of players. Assuming 10 players. >>>\n");
+            playersNumber = 10;
+        } else if(playersNumber < 2) {
+            System.out.println("\n<<< Invalid number of players. Assuming 2 players. >>>\n");
+            playersNumber = 2;
+        }
+        this.player_amount = playersNumber;
 
-        this.width=width;
-        this.height=height;
-        //TODO: verificar se os números lidos são números
+        System.out.print( "\nEnter the size of the map (width & height): \n::: " );
+        String width = number.next();
+        System.out.print("::: ");
+        String height = number.next();
+        while(!width.matches("^[0-9]+$") || !height.matches("^[0-9]+$")) {
+            System.out.print( "\nEnter valid size of the map: \n::: " );
+            width = number.next();
+            System.out.print("::: ");
+            height = number.next();
+        }
+
+        this.width= Integer.parseInt(width);
+        this.height= Integer.parseInt(height);
+
     }
 
     /**
