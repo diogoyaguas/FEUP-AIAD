@@ -107,7 +107,7 @@ public abstract class GameAgent extends Agent {
         //TODO avisar o controller e o agent que comprei a cidade dele
     }
 
-    protected  ArrayList<City> buyEmptyCities(int moneyToSpent) {
+    protected ArrayList<City> buyEmptyCities(int moneyToSpent) {
         ArrayList<City> my_new_cities = new ArrayList<>();
         for (City empty : this.empty_cities) {
             if (moneyToSpent >= empty.getCity_price()) {
@@ -123,7 +123,7 @@ public abstract class GameAgent extends Agent {
 
     protected void upgradeMyDefenses(int moneyToDefenses) {
         int amountOfDefenses = moneyToDefenses / this.my_cities.size();
-        for (City my_cities: this.my_cities) {
+        for (City my_cities : this.my_cities) {
             my_cities.addDefences(amountOfDefenses);
         }
     }

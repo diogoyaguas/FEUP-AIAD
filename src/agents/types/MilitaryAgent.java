@@ -1,7 +1,6 @@
 package agents.types;
 
 import agents.GameAgent;
-import com.sun.deploy.util.ArrayUtil;
 import game.board.City;
 
 import java.util.ArrayList;
@@ -26,11 +25,11 @@ public class MilitaryAgent extends GameAgent {
     }
 
     private ArrayList<City> attackOpponentCities() {
-        ArrayList<City> my_new_cities =  new ArrayList<>();
-        if(!this.interactable_cities.isEmpty()) {
+        ArrayList<City> my_new_cities = new ArrayList<>();
+        if (!this.interactable_cities.isEmpty()) {
             int attackers = getTotalOfDefenses() - 10;
-            for(City interacting_city : this.interactable_cities) {
-                if(attackers >=  interacting_city.getDefences()) {
+            for (City interacting_city : this.interactable_cities) {
+                if (attackers >= interacting_city.getDefences()) {
                     attackers -= interacting_city.getDefences();
                     interacting_city.setOwner(this.getAID());
                     this.thisCityIsNowMine(interacting_city);
@@ -38,7 +37,7 @@ public class MilitaryAgent extends GameAgent {
                     my_new_cities.add(interacting_city);
                 }
             }
-            attackers+=10;
+            attackers += 10;
             redistributeDefenses(attackers);
         }
         return my_new_cities;
@@ -46,14 +45,14 @@ public class MilitaryAgent extends GameAgent {
 
     private int getTotalOfDefenses() {
         int total = 0;
-        for (City my_cities: this.my_cities) {
+        for (City my_cities : this.my_cities) {
             total += my_cities.getDefences();
         }
         return total;
     }
 
     private void redistributeDefenses(int amountOfDefenses) {
-        for (City my_cities: this.my_cities) {
+        for (City my_cities : this.my_cities) {
             my_cities.addDefences(amountOfDefenses);
         }
     }
