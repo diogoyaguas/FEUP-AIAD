@@ -109,8 +109,8 @@ public abstract class GameAgent extends Agent {
 
     protected ArrayList<City> buyEmptyCities(ArrayList<City> new_cities, int moneyToSpent) {
         for (City empty : this.empty_cities) {
-            System.out.println("Agent " + getName() + ": Getting a new city");
             if (moneyToSpent >= empty.getCity_price()) {
+                System.out.println("Agent " + getName() + ": Getting a new city");
                 this.current_money -= empty.getCity_price();
                 empty.setOwner(this.getAID());
                 empty.reset();
@@ -128,8 +128,8 @@ public abstract class GameAgent extends Agent {
      */
     protected void upgradeMyDefenses(int moneyToDefenses) {
         int amountOfDefenses = moneyToDefenses / this.my_cities.size();
+        System.out.println("Agent " + getName() + ": Increasing defenses");
         for (City my_cities : this.my_cities) {
-            System.out.println("Agent " + getName() + ": Increasing defenses");
             my_cities.addDefences(amountOfDefenses);
         }
     }
