@@ -1,6 +1,5 @@
 package game;
 
-import jade.core.Agent;
 import jade.core.Profile;
 import jade.core.ProfileImpl;
 import jade.core.Runtime;
@@ -12,17 +11,15 @@ public class Container {
 
     private ContainerController container;
 
-    public Container(String name)
-    {
+    public Container(String name) {
         Runtime rt = Runtime.instance();
         Profile p2 = new ProfileImpl();
         p2.setParameter(Profile.CONTAINER_NAME, name);
-        p2.setParameter(Profile.GUI,"true");
+        p2.setParameter(Profile.GUI, "true");
         container = rt.createAgentContainer(p2);
     }
 
-    public AgentController addAgent(String name, String agentType, int width,int height)
-    {
+    public AgentController addAgent(String name, String agentType, int width, int height) {
         try {
             Object[] args = new Object[2];
             args[0] = width;

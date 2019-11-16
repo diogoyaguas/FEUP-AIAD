@@ -8,12 +8,12 @@ import jade.core.Agent;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.FSMBehaviour;
 import jade.domain.DFService;
-import jade.domain.FIPAAgentManagement.*;
+import jade.domain.FIPAAgentManagement.DFAgentDescription;
+import jade.domain.FIPAAgentManagement.SearchConstraints;
+import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
-import jade.domain.FIPANames;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.proto.AchieveREResponder;
 import jade.proto.SubscriptionInitiator;
 import jade.util.leap.Iterator;
 
@@ -33,12 +33,11 @@ public class GameController extends Agent {
     private int agent_amount;
 
 
-
     public void setup() {
         Object[] args = getArguments();
         agent_amount = (Integer) args[0];
         int width = (int) args[1];
-        int height= (int) args[2];
+        int height = (int) args[2];
         turns = new LinkedList<>();
         board = new Board(width, height);
 
@@ -74,12 +73,11 @@ public class GameController extends Agent {
                             }
                         }
                     }
-                }
-                catch (FIPAException fe) {
+                } catch (FIPAException fe) {
                     fe.printStackTrace();
                 }
             }
-        } );
+        });
 
         FSMBehaviour fsm = new FSMBehaviour();
 
@@ -109,7 +107,9 @@ public class GameController extends Agent {
         send(msg);
     }
 
-    private void addActionGUI(String msg) { if(gui != null) gui.addAction(msg); }
+    private void addActionGUI(String msg) {
+        if (gui != null) gui.addAction(msg);
+    }
 
     private void updateBoardGUI() {
         gui.setBoard(board);
@@ -124,7 +124,7 @@ public class GameController extends Agent {
 
         @Override
         public void action() {
-            if(turns.size() != agent_amount) return;
+            if (turns.size() != agent_amount) return;
             AID p = turns.remove();
             System.out.println("Agent " + getLocalName() + ": " + p.getName() + " Turn");
             addActionGUI(p.getName() + " Turn");
@@ -149,13 +149,13 @@ public class GameController extends Agent {
                     .and(MessageTemplate.not(MessageTemplate.MatchSender(getDefaultDF())),
                             MessageTemplate.or(MessageTemplate.MatchPerformative(ACLMessage.INFORM),
                                     MessageTemplate.MatchPerformative(ACLMessage.REQUEST))));
-            if(req == null) return;
+            if (req == null) return;
 
-            System.out.println("Agent "+getLocalName()+": " + req.getPerformative() + " received from "+req.getSender().getName()+". Action is "+req.getContent());
+            System.out.println("Agent " + getLocalName() + ": " + req.getPerformative() + " received from " + req.getSender().getName() + ". Action is " + req.getContent());
 
             String[] param = req.getContent().split(" ");
             AID p = req.getSender();
-            if(param[0].equals("Update") && req.getPerformative() == ACLMessage.INFORM) {
+            if (param[0].equals("Update") && req.getPerformative() == ACLMessage.INFORM) {
                 // TODO: Update received, atualizar informações
                 end = true;
                 return;
@@ -167,28 +167,28 @@ public class GameController extends Agent {
             String res = "";
 
             String[] content = req.getContent().split("\\|");
-            for(int i = 1; i < content.length; i++) {
+            for (int i = 1; i < content.length; i++) {
                 String[] coords = content[i].split("_");
                 int x = Integer.parseInt(coords[0]);
                 int y = Integer.parseInt(coords[1]);
-                City c = board.getCity(x,y);
+                City c = board.getCity(x, y);
                 String value;
 
-                if(c == null) value = "Null";
+                if (c == null) value = "Null";
 
                 else {
                     AID owner = c.getOwner();
-                    if(owner == null) value = "Empty";
+                    if (owner == null) value = "Empty";
                     else value = owner.toString();
                 }
 
-                if(res.length() == 0) res += value;
+                if (res.length() == 0) res += value;
                 else res += "|" + value;
             }
 
             inform.setContent(res);
             send(inform);
-            System.out.println("Agent "+getLocalName()+": INFORM sent to "+req.getSender().getName() + ", " + res);
+            System.out.println("Agent " + getLocalName() + ": INFORM sent to " + req.getSender().getName() + ", " + res);
 
         }
 

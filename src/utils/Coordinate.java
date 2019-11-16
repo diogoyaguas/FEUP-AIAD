@@ -17,27 +17,32 @@ public class Coordinate {
         this.y = Integer.parseInt(c[1]);
     }
 
-    public int getX() {return x;}
-    public int getY() {return y;}
-    public Coordinate getTop(int width,int height)
-    {
-        if(y-1<0)return null;
-        return new Coordinate(x,y-1);
+    public int getX() {
+        return x;
     }
-    public Coordinate getButtom(int width,int height)
-    {
-        if(y+1>=height)return null;
-        return new Coordinate(x,y+1);
+
+    public int getY() {
+        return y;
     }
-    public Coordinate getLeft(int width,int height)
-    {
-        if(x-1<0)return null;
-        return new Coordinate(x-1,y);
+
+    public Coordinate getTop(int width, int height) {
+        if (y - 1 < 0) return null;
+        return new Coordinate(x, y - 1);
     }
-    public Coordinate getRight(int width,int height)
-    {
-        if(x+1>=width)return null;
-        return new Coordinate(x+1,y);
+
+    public Coordinate getButtom(int width, int height) {
+        if (y + 1 >= height) return null;
+        return new Coordinate(x, y + 1);
+    }
+
+    public Coordinate getLeft(int width, int height) {
+        if (x - 1 < 0) return null;
+        return new Coordinate(x - 1, y);
+    }
+
+    public Coordinate getRight(int width, int height) {
+        if (x + 1 >= width) return null;
+        return new Coordinate(x + 1, y);
     }
 
     @Override
@@ -51,10 +56,10 @@ public class Coordinate {
 
     public ArrayList<Coordinate> adjacents() {
         ArrayList ret = new ArrayList();
-        ret.add(new Coordinate(x-1,y));
-        ret.add(new Coordinate(x+1,y));
-        ret.add(new Coordinate(x,y-1));
-        ret.add(new Coordinate(x,y+1));
+        ret.add(new Coordinate(x - 1, y));
+        ret.add(new Coordinate(x + 1, y));
+        ret.add(new Coordinate(x, y - 1));
+        ret.add(new Coordinate(x, y + 1));
         return ret;
     }
 

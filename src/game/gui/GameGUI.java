@@ -4,7 +4,6 @@ import game.board.Board;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
 
 
 public class GameGUI {
@@ -30,7 +29,7 @@ public class GameGUI {
         frame.setVisible(true);
 
         panel = new JPanel();
-        panel.setLayout(new GridLayout(1,2));
+        panel.setLayout(new GridLayout(1, 2));
         frame.add(panel);
 
         boardPanel = new BoardPanel();
@@ -51,6 +50,6 @@ public class GameGUI {
     }
 
     public void addAction(String a) {
-        ((DefaultListModel)list.getModel()).add(0, a);
+        ((DefaultListModel) list.getModel()).add(0, a);
     }
 }

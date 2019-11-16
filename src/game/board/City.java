@@ -1,6 +1,5 @@
 package game.board;
 
-import agents.GameAgent;
 import jade.core.AID;
 import utils.Coordinate;
 
@@ -73,76 +72,63 @@ public class City implements Comparator {
         religion_attacker = new HashMap<AID, Integer>();
     }
 
-    public int maximumReligionConvertionCost(AID changer)
-    {
-        int percent_not_owned=0;
-        if(changer==owner)
-        {
-            percent_not_owned=100-this.my_religion;
-            if(percent_not_owned>50)
-                percent_not_owned=50;
-            return percent_not_owned*5*((int)Math.ceil(this.getCity_price()*0.05));
-        }
-        else
-        {
-            percent_not_owned=100-this.religion_attacker.get(changer);
-            if(percent_not_owned>50)
-                percent_not_owned=50;
-            return percent_not_owned*5*((int)Math.ceil(this.getCity_price()*0.1));
+    public int maximumReligionConvertionCost(AID changer) {
+        int percent_not_owned = 0;
+        if (changer == owner) {
+            percent_not_owned = 100 - this.my_religion;
+            if (percent_not_owned > 50)
+                percent_not_owned = 50;
+            return percent_not_owned * 5 * ((int) Math.ceil(this.getCity_price() * 0.05));
+        } else {
+            percent_not_owned = 100 - this.religion_attacker.get(changer);
+            if (percent_not_owned > 50)
+                percent_not_owned = 50;
+            return percent_not_owned * 5 * ((int) Math.ceil(this.getCity_price() * 0.1));
         }
     }
-    public int maximumReligionConvertionPercentage(AID changer)
-    {
-        int percent_not_owned=0;
-        if(changer==owner)
-        {
-            percent_not_owned=100-this.my_religion;
+
+    public int maximumReligionConvertionPercentage(AID changer) {
+        int percent_not_owned = 0;
+        if (changer == owner) {
+            percent_not_owned = 100 - this.my_religion;
+        } else {
+            percent_not_owned = 100 - this.religion_attacker.get(changer);
         }
-        else
-        {
-            percent_not_owned=100-this.religion_attacker.get(changer);
-        }
-        if(percent_not_owned>50)
-            percent_not_owned=50;
+        if (percent_not_owned > 50)
+            percent_not_owned = 50;
         return percent_not_owned;
     }
 
-    public Boolean changeReligionAmount(AID changer,int percentage)
-    {
-        if(changer==owner)
-        {
-            this.my_religion+=percentage;
-            if (this.my_religion>=100)
-            {
-                this.religion_attacker=new HashMap<>();
-                this.my_religion=100;
+    public Boolean changeReligionAmount(AID changer, int percentage) {
+        if (changer == owner) {
+            this.my_religion += percentage;
+            if (this.my_religion >= 100) {
+                this.religion_attacker = new HashMap<>();
+                this.my_religion = 100;
                 return true;
             }
-            int attackers_quantity=this.religion_attacker.size();
-            int amount_to_reduce=percentage;
+            int attackers_quantity = this.religion_attacker.size();
+            int amount_to_reduce = percentage;
             Iterator it = this.religion_attacker.entrySet().iterator();
-            while(it.hasNext())
-            {
-                HashMap.Entry pair=(HashMap.Entry)it.next();
-                AID id=(AID)pair.getKey();
-                int retirar=amount_to_reduce;
-                if(this.religion_attacker.get(id)<amount_to_reduce)
-                    retirar=this.religion_attacker.get(id);
-                amount_to_reduce-=retirar;
-                this.religion_attacker.put(id,((int)pair.getValue())-retirar);
+            while (it.hasNext()) {
+                HashMap.Entry pair = (HashMap.Entry) it.next();
+                AID id = (AID) pair.getKey();
+                int retirar = amount_to_reduce;
+                if (this.religion_attacker.get(id) < amount_to_reduce)
+                    retirar = this.religion_attacker.get(id);
+                amount_to_reduce -= retirar;
+                this.religion_attacker.put(id, ((int) pair.getValue()) - retirar);
                 it.remove();
-                if(amount_to_reduce<=0)break;
+                if (amount_to_reduce <= 0) break;
             }
-        }
-        else
-        {
+        } else {
             int new_amount = this.religion_attacker.get(changer) + percentage;
-            if(new_amount>=100){
-                new_amount=100;
+            if (new_amount >= 100) {
+                new_amount = 100;
             }
-            this.religion_attacker.put(changer,new_amount);
-            this.my_religion-=percentage;
-            if(new_amount==100)
+            this.religion_attacker.put(changer, new_amount);
+            this.my_religion -= percentage;
+            if (new_amount == 100)
                 return true;
         }
         return false;

@@ -9,7 +9,7 @@ public class MilitaryAgent extends GameAgent {
 
     @Override
     public ArrayList<City> logic() {
-        ArrayList<City> my_new_cities=new ArrayList<>();
+        ArrayList<City> my_new_cities = new ArrayList<>();
         return my_new_cities;
 
     }

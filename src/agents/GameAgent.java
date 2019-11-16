@@ -4,7 +4,6 @@ import game.board.City;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
-import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -14,7 +13,6 @@ import jade.lang.acl.ACLCodec;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.StringACLCodec;
-import jade.proto.AchieveREInitiator;
 import utils.Coordinate;
 
 import java.io.StringReader;
@@ -38,10 +36,10 @@ public abstract class GameAgent extends Agent {
      */
     public void setup() {
         Object[] args = getArguments();
-        this.current_money=0;
+        this.current_money = 0;
         System.out.println("Setting up agent");
         this.width = (int) args[0];
-        this.height =(int) args[1];
+        this.height = (int) args[1];
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -67,34 +65,34 @@ public abstract class GameAgent extends Agent {
         addBehaviour(new ReceiveTurn());
     }
 
-    private void setInteractable_coordinates()
-    {
+    private void setInteractable_coordinates() {
         this.interactable_coordinates = new ArrayList<Coordinate>();
-        for (Coordinate cord: this.pos) {
-            Coordinate adicionar = cord.getTop(this.width,this.height);
-            if(adicionar!=null && !this.interactable_coordinates.contains(adicionar))this.interactable_coordinates.add(adicionar);
-            adicionar = cord.getButtom(this.width,this.height);
-            if(adicionar!=null && !this.interactable_coordinates.contains(adicionar))this.interactable_coordinates.add(adicionar);
-            adicionar = cord.getLeft(this.width,this.height);
-            if(adicionar!=null && !this.interactable_coordinates.contains(adicionar))this.interactable_coordinates.add(adicionar);
-            adicionar = cord.getRight(this.width,this.height);
-            if(adicionar!=null && !this.interactable_coordinates.contains(adicionar))this.interactable_coordinates.add(adicionar);
-        }
-    }
-    private void setMy_cities()
-    {
-        this.my_cities=new ArrayList<>();
-        for(Coordinate cord:this.pos)
-        {
-            this.my_cities.add(new City(this.getAID(),cord));
+        for (Coordinate cord : this.pos) {
+            Coordinate adicionar = cord.getTop(this.width, this.height);
+            if (adicionar != null && !this.interactable_coordinates.contains(adicionar))
+                this.interactable_coordinates.add(adicionar);
+            adicionar = cord.getButtom(this.width, this.height);
+            if (adicionar != null && !this.interactable_coordinates.contains(adicionar))
+                this.interactable_coordinates.add(adicionar);
+            adicionar = cord.getLeft(this.width, this.height);
+            if (adicionar != null && !this.interactable_coordinates.contains(adicionar))
+                this.interactable_coordinates.add(adicionar);
+            adicionar = cord.getRight(this.width, this.height);
+            if (adicionar != null && !this.interactable_coordinates.contains(adicionar))
+                this.interactable_coordinates.add(adicionar);
         }
     }
 
-    private void getTurnMoney()
-    {
-        for(City city:this.my_cities)
-        {
-            this.current_money+=city.getMoneyProduced();
+    private void setMy_cities() {
+        this.my_cities = new ArrayList<>();
+        for (Coordinate cord : this.pos) {
+            this.my_cities.add(new City(this.getAID(), cord));
+        }
+    }
+
+    private void getTurnMoney() {
+        for (City city : this.my_cities) {
+            this.current_money += city.getMoneyProduced();
         }
     }
 
@@ -105,8 +103,7 @@ public abstract class GameAgent extends Agent {
         System.out.println("Exiting");
     }
 
-    protected void thisCityIsNowMine(City city)
-    {
+    protected void thisCityIsNowMine(City city) {
         //TODO avisar o controller e o agent que comprei a cidade dele
     }
 
@@ -148,8 +145,8 @@ public abstract class GameAgent extends Agent {
                     ": Inform Received, " + inform.getContent());
 
             String[] content = inform.getContent().split("\\|");
-            empty_cities=new ArrayList<>();
-            interactable_cities=new ArrayList<>();
+            empty_cities = new ArrayList<>();
+            interactable_cities = new ArrayList<>();
             for (int i = 0; i < content.length; i++) {
                 int x = interactable_coordinates.get(i).getX();
                 int y = interactable_coordinates.get(i).getY();
@@ -157,9 +154,9 @@ public abstract class GameAgent extends Agent {
                 if (content[i].equals("Empty")) {
                     System.out.println("Agent " + getAgent().getName() +
                             ": Position - " + x + "," + y + " is empty.");
-                    empty_cities.add(new City(null,new Coordinate(x,y)));
+                    empty_cities.add(new City(null, new Coordinate(x, y)));
                 }
-                    // Espaço inválido
+                // Espaço inválido
                 else if (content[i].equals("Null"))
                     System.out.println("Agent " + getAgent().getName() +
                             ": Position - " + x + "," + y + " doesn't exist.");
@@ -171,7 +168,7 @@ public abstract class GameAgent extends Agent {
                         System.out.println("Agent " + getAgent().getName() +
                                 ": Position - " + x + "," + y + " it's occupied by " +
                                 opponent.getName());
-                        City opponent_city = new City(opponent,new Coordinate(x,y));
+                        City opponent_city = new City(opponent, new Coordinate(x, y));
                         //TODO é preciso mais informação sobre a cidade, costo da cidade, religião que eu tenho agora
                         interactable_cities.add(opponent_city);
                     } catch (ACLCodec.CodecException e) {

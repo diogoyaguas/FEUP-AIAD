@@ -14,31 +14,29 @@ public class MainContainer {
 
     private ContainerController mainContainer;
 
-    public MainContainer()
-    {
+    public MainContainer() {
 
         Runtime rt = Runtime.instance();
         Profile p1 = new ProfileImpl();
         p1.setParameter(Profile.CONTAINER_NAME, "GameContainer");
-        p1.setParameter(Profile.GUI,"true");
+        p1.setParameter(Profile.GUI, "true");
         mainContainer = rt.createMainContainer(p1);
     }
 
-    public ContainerController getController()
-    {
+    public ContainerController getController() {
         return this.mainContainer;
     }
 
-    public void setController(ContainerController cc)
-    {
-        this.mainContainer=cc;
+    public void setController(ContainerController cc) {
+        this.mainContainer = cc;
     }
 
-    public AgentController createAgent(String name,String className) throws StaleProxyException {
+    public AgentController createAgent(String name, String className) throws StaleProxyException {
         Object[] args = new Object[0];
         return mainContainer.createNewAgent(name, className, args);
     }
-    public AgentController createAgent(String name,String className,int player_amount,int width,int height) throws StaleProxyException {
+
+    public AgentController createAgent(String name, String className, int player_amount, int width, int height) throws StaleProxyException {
         Object[] args = new Object[3];
         args[0] = player_amount;
         args[1] = width;
