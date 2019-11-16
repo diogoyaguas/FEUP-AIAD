@@ -4,42 +4,51 @@ import agents.GameAgent;
 import game.board.City;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 public class EconomicsAgent extends GameAgent {
 
     @Override
     public ArrayList<City> logic() {
 
-        ArrayList<City> my_new_cities;
+        ArrayList<City> my_new_cities=new ArrayList<>();
 
-        my_new_cities = buyEmptyCities(this.current_money);
+        my_new_cities = buyEmptyCities(my_new_cities,this.current_money);
 
-        for (City my_city : this.my_cities) {
-            if (my_city.getMy_religion() != 100) {
-                int cost = my_city.maximumReligionConvertionCost(this.getAID());
-                if (this.current_money >= cost) {
-                    this.current_money -= cost;
-                    my_city.changeReligionAmount(this.getAID(), my_city.maximumReligionConvertionPercentage(this.getAID()));
-                }
+        int money_for_upgrading = this.current_money / 4;
+        int money_for_attacking = money_for_upgrading;
+        int money_for_defenses = money_for_upgrading;
+        int money_for_religion = money_for_upgrading;
+        this.current_money= 0;
+        money_for_upgrading+=this.defendReligion(money_for_religion);
+
+        for(City city:this.interactable_cities)
+        {
+            if(money_for_attacking>=city.getCity_price())
+            {
+                money_for_attacking-=city.getCity_price();
+                city.setOwner(this.getAID());
+                this.thisCityIsNowMine(city);
+                this.my_cities.add(city);
+                this.pos.add(city.getMy_cords());
+                my_new_cities.add(city);
             }
         }
-        int money_for_upgrading = this.current_money / 3;
-        int money_for_attacking = this.current_money / 3;
-        int money_for_defenses = this.current_money / 3;
-        for (City interracting_city : this.interactable_cities) {
-            int cost = interracting_city.getCity_price();
-            if (money_for_attacking >= cost) {
-                this.current_money -= cost;
-                money_for_attacking -= cost;
-                interracting_city.setOwner(this.getAID());
-                this.thisCityIsNowMine(interracting_city);
-                this.my_cities.add(interracting_city);
+        this.current_money+=money_for_attacking;
+        this.upgradeMyDefenses(money_for_defenses);
+        this.current_money+=money_for_defenses;
+
+        Collections.sort(this.my_cities);
+        for(City my_city:this.my_cities)
+        {
+            if(money_for_upgrading>=my_city.getCostUpgrade())
+            {
+                money_for_upgrading-=my_city.getCostUpgrade();
+                my_city.upgradeCity();
             }
         }
-        money_for_upgrading += money_for_attacking;
-        for (City my_city : this.my_cities) {
-
-        }
+        this.current_money+=money_for_upgrading;
         return my_new_cities;
     }
 

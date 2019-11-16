@@ -13,6 +13,7 @@ import jade.lang.acl.ACLCodec;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.StringACLCodec;
+import javafx.util.Pair;
 import utils.Coordinate;
 
 import java.io.StringReader;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
 
 public abstract class GameAgent extends Agent {
 
-    private ArrayList<Coordinate> pos = new ArrayList<>();
+    protected ArrayList<Coordinate> pos = new ArrayList<>();
     private AID controller;
     protected int width;
     protected int height;
@@ -103,29 +104,58 @@ public abstract class GameAgent extends Agent {
         System.out.println("Exiting");
     }
 
+
+
     protected void thisCityIsNowMine(City city) {
         //TODO avisar o controller e o agent que comprei a cidade dele
     }
 
-    protected ArrayList<City> buyEmptyCities(int moneyToSpent) {
-        ArrayList<City> my_new_cities = new ArrayList<>();
+    protected ArrayList<City> buyEmptyCities(ArrayList<City> new_cities ,int moneyToSpent) {
         for (City empty : this.empty_cities) {
             if (moneyToSpent >= empty.getCity_price()) {
                 this.current_money -= empty.getCity_price();
                 empty.setOwner(this.getAID());
                 empty.reset();
                 this.my_cities.add(empty);
-                my_new_cities.add(empty);
+                new_cities.add(empty);
             }
         }
-        return my_new_cities;
+        return new_cities;
     }
 
+    /**
+     * Wasted all money upgrading evenly every city you own
+     * @param moneyToDefenses The money I want to waste defending my cities
+     */
     protected void upgradeMyDefenses(int moneyToDefenses) {
         int amountOfDefenses = moneyToDefenses / this.my_cities.size();
         for (City my_cities : this.my_cities) {
             my_cities.addDefences(amountOfDefenses);
         }
+    }
+
+    /**
+     * Tries to defend all cities from religion attacks using the money given
+     * @param money_to_waste The money used to defend cities against religion attacks
+     * @return The money not wasted
+     */
+    protected int defendReligion(int money_to_waste)
+    {
+        for (City my_city : this.my_cities) {
+            my_city.sortReligionAttackers();
+            for(int i=0;i<my_city.getReligion_attacker().size();i++)
+            {
+                int current_amount=my_city.getReligion_attacker().get(i).getValue();
+                if(current_amount>=50)current_amount=50;
+                int cost= my_city.costOfReligion(current_amount);
+                if(money_to_waste>=cost)
+                {
+                    money_to_waste-=cost;
+                    my_city.getReligion_attacker().set(i,new Pair<AID, Integer>(my_city.getReligion_attacker().get(i).getKey(),my_city.getReligion_attacker().get(i).getValue()-current_amount));
+                }
+            }
+        }
+        return money_to_waste;
     }
 
     private class ReceiveTurn extends CyclicBehaviour {
@@ -143,6 +173,7 @@ public abstract class GameAgent extends Agent {
             getTurnMoney();
             System.out.println("Agent " + getName() + ": My turn");
             String ret = "Which";
+            setInteractable_coordinates();
             for (Coordinate cord : interactable_coordinates) {
                 ret += "|" + cord;
             }
