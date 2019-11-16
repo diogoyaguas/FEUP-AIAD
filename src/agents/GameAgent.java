@@ -107,6 +107,19 @@ public abstract class GameAgent extends Agent {
         //TODO avisar o controller e o agent que comprei a cidade dele
     }
 
+    protected  ArrayList<City> buyEmptyCities(int moneyToSpent) {
+        ArrayList<City> my_new_cities = new ArrayList<>();
+        for (City empty : this.empty_cities) {
+            if (moneyToSpent >= empty.getCity_price()) {
+                this.current_money -= empty.getCity_price();
+                empty.setOwner(this.getAID());
+                empty.reset();
+                this.my_cities.add(empty);
+                my_new_cities.add(empty);
+            }
+        }
+        return my_new_cities;
+    }
 
     private class ReceiveTurn extends CyclicBehaviour {
 

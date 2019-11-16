@@ -9,7 +9,11 @@ public class MilitaryAgent extends GameAgent {
 
     @Override
     public ArrayList<City> logic() {
-        ArrayList<City> my_new_cities = new ArrayList<>();
+        ArrayList<City> my_new_cities;
+
+        int moneyToBuyEmptyCities = this.current_money / 4;
+        my_new_cities = buyEmptyCities(moneyToBuyEmptyCities);
+
         return my_new_cities;
 
     }

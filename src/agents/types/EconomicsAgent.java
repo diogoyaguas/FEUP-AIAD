@@ -9,16 +9,11 @@ public class EconomicsAgent extends GameAgent {
 
     @Override
     public ArrayList<City> logic() {
-        ArrayList<City> my_new_cities = new ArrayList<>();
-        for (City empty : this.empty_cities) {
-            if (this.current_money >= empty.getCity_price()) {
-                this.current_money -= empty.getCity_price();
-                empty.setOwner(this.getAID());
-                empty.reset();
-                this.my_cities.add(empty);
-                my_new_cities.add(empty);
-            }
-        }
+
+        ArrayList<City> my_new_cities;
+
+        my_new_cities = buyEmptyCities(this.current_money);
+
         for (City my_city : this.my_cities) {
             if (my_city.getMy_religion() != 100) {
                 int cost = my_city.maximumReligionConvertionCost(this.getAID());
