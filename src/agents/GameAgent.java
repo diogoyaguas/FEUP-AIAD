@@ -18,6 +18,7 @@ import utils.Coordinate;
 
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public abstract class GameAgent extends Agent {
 
@@ -119,6 +120,16 @@ public abstract class GameAgent extends Agent {
             }
         }
         return new_cities;
+    }
+
+    protected void upgradeCities(int moneyToUpgradeCities) {
+        Collections.sort(this.my_cities);
+        for (City my_city : this.my_cities) {
+            if (moneyToUpgradeCities >= my_city.getCostUpgrade()) {
+                moneyToUpgradeCities -= my_city.getCostUpgrade();
+                my_city.upgradeCity();
+            }
+        }
     }
 
     /**

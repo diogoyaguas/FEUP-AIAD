@@ -4,7 +4,6 @@ import agents.GameAgent;
 import game.board.City;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class EconomicsAgent extends GameAgent {
 
@@ -22,6 +21,20 @@ public class EconomicsAgent extends GameAgent {
         this.current_money = 0;
         money_for_upgrading += this.defendReligion(money_for_religion);
 
+        my_new_cities = buyOpponentsCities(my_new_cities, money_for_attacking);
+
+        this.current_money += money_for_attacking;
+        this.upgradeMyDefenses(money_for_defenses);
+        this.current_money += money_for_defenses;
+
+        upgradeCities(money_for_upgrading);
+
+        this.current_money += money_for_upgrading;
+
+        return my_new_cities;
+    }
+
+    private ArrayList<City> buyOpponentsCities(ArrayList<City> my_new_cities, int money_for_attacking) {
         for (City city : this.interactable_cities) {
             if (money_for_attacking >= city.getCity_price()) {
                 money_for_attacking -= city.getCity_price();
@@ -32,18 +45,6 @@ public class EconomicsAgent extends GameAgent {
                 my_new_cities.add(city);
             }
         }
-        this.current_money += money_for_attacking;
-        this.upgradeMyDefenses(money_for_defenses);
-        this.current_money += money_for_defenses;
-
-        Collections.sort(this.my_cities);
-        for (City my_city : this.my_cities) {
-            if (money_for_upgrading >= my_city.getCostUpgrade()) {
-                money_for_upgrading -= my_city.getCostUpgrade();
-                my_city.upgradeCity();
-            }
-        }
-        this.current_money += money_for_upgrading;
         return my_new_cities;
     }
 

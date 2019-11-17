@@ -17,8 +17,13 @@ public class MilitaryAgent extends GameAgent {
 
         my_new_cities = attackOpponentCities();
 
-        int moneyToBuyEmptyCities = this.current_money;
+        int moneyToBuyEmptyCities = this.current_money / 2;
+        this.current_money -= moneyToBuyEmptyCities;
         my_new_cities = buyEmptyCities(my_new_cities, moneyToBuyEmptyCities);
+
+        int moneyToUpgradeCities = this.current_money;
+        this.current_money -= moneyToUpgradeCities;
+        upgradeCities(moneyToUpgradeCities);
 
         return my_new_cities;
 
