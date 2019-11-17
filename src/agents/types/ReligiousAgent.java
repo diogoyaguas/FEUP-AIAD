@@ -28,7 +28,7 @@ public class ReligiousAgent extends GameAgent {
 
         int moneyToUpgradeCities = moneyForUpgrading / 2;
         upgradeCities(moneyToUpgradeCities);
-
+        //TODO tirar o dinheiro usado do current money
         return my_new_cities;
     }
 
@@ -36,7 +36,7 @@ public class ReligiousAgent extends GameAgent {
         if (!this.interactable_cities.isEmpty()) {
             System.out.println("Agent " + getName() + ": Converting opponent cities");
             for (City interacting_city : this.interactable_cities) {
-
+                //TODO atualizar a cidade que estou a interazir com os valores novos de religião
             }
         }
         return my_new_cities;
