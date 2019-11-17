@@ -5,8 +5,6 @@ import javafx.util.Pair;
 import utils.Coordinate;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class City implements Comparable {
 

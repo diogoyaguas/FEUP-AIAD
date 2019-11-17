@@ -28,7 +28,6 @@ public class ReligiousAgent extends GameAgent {
 
         int moneyToUpgradeCities = moneyForUpgrading / 2;
         upgradeCities(moneyToUpgradeCities);
-        //TODO tirar o dinheiro usado do current money
         return my_new_cities;
     }
 

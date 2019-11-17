@@ -113,7 +113,7 @@ public abstract class GameAgent extends Agent {
             if (moneyToSpent >= empty.getCity_price()) {
                 System.out.println("Agent " + getName() + ": Getting a new city");
                 this.current_money -= empty.getCity_price();
-                moneyToSpent-=empty.getCity_price();
+                moneyToSpent -= empty.getCity_price();
                 empty.setOwner(this.getAID());
                 empty.reset();
                 this.my_cities.add(empty);
