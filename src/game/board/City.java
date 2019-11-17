@@ -106,9 +106,8 @@ public class City implements Comparable {
         city_price = 10;
     }
 
-    public void resetReligion()
-    {
-        religion_attacker=new ArrayList<>();
+    public void resetReligion() {
+        religion_attacker = new ArrayList<>();
     }
 
     /**
@@ -202,9 +201,8 @@ public class City implements Comparable {
         return religion_attacker;
     }
 
-    public void setReligionAttacker(int index,Pair<AID,Integer> pair)
-    {
-        if(index!=-1)
+    public void setReligionAttacker(int index, Pair<AID, Integer> pair) {
+        if (index != -1)
             this.religion_attacker.remove(index);
         this.religion_attacker.add(pair);
     }

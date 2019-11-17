@@ -3,7 +3,6 @@ package agents;
 import game.board.City;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.ParallelBehaviour;
 import jade.domain.DFService;
@@ -183,7 +182,7 @@ public abstract class GameAgent extends Agent {
      */
     protected void upgradeMyDefenses() {
         int amountOfDefenses = this.moneyToDefenses / this.my_cities.size();
-        if(this.my_cities.size() > this.moneyToDefenses && this.moneyToDefenses != 0) {
+        if (this.my_cities.size() > this.moneyToDefenses && this.moneyToDefenses != 0) {
             amountOfDefenses = 1;
         }
         System.out.println("Agent " + getName() + ": Increasing defenses");
@@ -236,7 +235,7 @@ public abstract class GameAgent extends Agent {
          */
         private void handleTurn() {
 
-            if(my_cities.isEmpty()) {
+            if (my_cities.isEmpty()) {
                 doDelete();
                 takeDown();
             }
@@ -261,11 +260,11 @@ public abstract class GameAgent extends Agent {
             System.out.println("Agent " + getAgent().getName() +
                     ": Request Sent, " + msg.getContent());
 
-                // Get information about surroundings
+            // Get information about surroundings
             ACLMessage inform = blockingReceive(MessageTemplate.and(MessageTemplate.and(
-                        MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-                        MessageTemplate.MatchSender(controller)),
-                        MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST)));
+                    MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+                    MessageTemplate.MatchSender(controller)),
+                    MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST)));
 
             System.out.println("Agent " + getAgent().getName() +
                     ": Inform Received, " + inform.getContent());
