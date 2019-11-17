@@ -100,11 +100,11 @@ public class City implements Comparable {
     public void reset() {
         current_level = 1;
         cost_to_upgrade = 100;
-        amount_money_producing = 5;
+        amount_money_producing = 25;
         amount_on_upgrade = 0;
         religion_attacker = new ArrayList<>();
         defences = 0;
-        city_price = 150;
+        city_price = 10;
     }
 
     /**

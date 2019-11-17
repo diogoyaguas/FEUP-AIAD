@@ -177,6 +177,9 @@ public abstract class GameAgent extends Agent {
      */
     protected void upgradeMyDefenses() {
         int amountOfDefenses = this.moneyToDefenses / this.my_cities.size();
+        if(this.my_cities.size() > this.moneyToDefenses && this.moneyToDefenses != 0) {
+            amountOfDefenses = 1;
+        }
         System.out.println("Agent " + getName() + ": Increasing defenses");
         for (City my_cities : this.my_cities) {
             this.moneyToDefenses -= amountOfDefenses;
@@ -301,6 +304,8 @@ public abstract class GameAgent extends Agent {
                 Coordinate cord = city.getCoordinates();
                 upd.append("|").append(cord);
             }
+
+            System.out.println("\n\n\n" + upd + "\n\n\n");
 
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);
