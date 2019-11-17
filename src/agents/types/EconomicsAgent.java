@@ -7,6 +7,11 @@ import java.util.ArrayList;
 
 public class EconomicsAgent extends GameAgent {
 
+    /**
+     * Logic of player's turn.
+     *
+     * @return list of new cities conquered.
+     */
     @Override
     public ArrayList<City> logic() {
 
@@ -55,7 +60,7 @@ public class EconomicsAgent extends GameAgent {
                 city.setOwner(this.getAID());
                 this.thisCityIsNowMine(city);
                 this.my_cities.add(city);
-                this.pos.add(city.getMy_cords());
+                this.pos.add(city.getCoordinates());
                 my_new_cities.add(city);
             }
         }

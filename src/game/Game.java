@@ -10,16 +10,19 @@ import java.util.Scanner;
 public class Game {
 
     private MainContainer main_container;
+    private Container game_container;
+
     private AgentController sniffer;
     private AgentController game_controller;
-    private Container game_container;
+
     private ArrayList<AgentController> players;
+
     private int player_amount = 3;
     private int width;
     private int height;
 
     /**
-     * Creates a new game. Doesn't start it
+     * Creates a new game by creating the main and game container.
      */
     public Game() {
         this.readPlayerInput();
@@ -39,7 +42,7 @@ public class Game {
     }
 
     /**
-     * Reads the user desired number of player, width and height
+     * Reads the user desired number of player, and width and height of the map.
      */
     private void readPlayerInput() {
         Scanner number = new Scanner(System.in);
@@ -76,7 +79,7 @@ public class Game {
     }
 
     /**
-     * Start the game by creating new agents. Doesn't start agents
+     * Start the game by creating new agents.
      */
     public void start() {
         this.addAgents(player_amount);

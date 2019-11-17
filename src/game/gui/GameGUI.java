@@ -16,10 +16,16 @@ public class GameGUI {
     private JPanel panel;
     private JList list;
 
+    /**
+     * Create game GUI.
+     */
     public GameGUI() {
         initialize();
     }
 
+    /**
+     * Initialize game GUI.
+     */
     private void initialize() {
         frame = new JFrame();
         frame.getContentPane().setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -44,11 +50,21 @@ public class GameGUI {
         frame.pack();
     }
 
+    /**
+     * Set board of game GUI.
+     *
+     * @param b board of GUI.
+     */
     public void setBoard(Board b) {
         boardPanel.setBoard(b);
         boardPanel.repaint();
     }
 
+    /**
+     * Add action to game GUI.
+     *
+     * @param a
+     */
     public void addAction(String a) {
         ((DefaultListModel) list.getModel()).add(0, a);
     }

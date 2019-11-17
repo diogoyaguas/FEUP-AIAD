@@ -7,6 +7,11 @@ import java.util.ArrayList;
 
 public class MilitaryAgent extends GameAgent {
 
+    /**
+     * Logic of player's turn.
+     *
+     * @return list of new cities conquered.
+     */
     @Override
     public ArrayList<City> logic() {
 

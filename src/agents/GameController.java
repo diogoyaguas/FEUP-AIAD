@@ -32,7 +32,9 @@ public class GameController extends Agent {
 
     private int agent_amount;
 
-
+    /**
+     * Setup game controller.
+     */
     public void setup() {
         Object[] args = getArguments();
         agent_amount = (Integer) args[0];
@@ -91,6 +93,11 @@ public class GameController extends Agent {
 
     }
 
+    /**
+     * Setup game player.
+     *
+     * @param player player of the game.
+     */
     private void setupPlayer(AID player) {
         int[] pos = board.getRandomAvailable();
         msg(player, "Init " + pos[0] + " " + pos[1], ACLMessage.INFORM);
@@ -100,6 +107,13 @@ public class GameController extends Agent {
         updateBoardGUI();
     }
 
+    /**
+     * Create a new message to send.
+     *
+     * @param player  receiver of the message.
+     * @param content content of the message.
+     * @param type    type of message.
+     */
     private void msg(AID player, String content, int type) {
         ACLMessage msg = new ACLMessage(type);
         msg.addReceiver(player);
@@ -107,17 +121,31 @@ public class GameController extends Agent {
         send(msg);
     }
 
+    /**
+     * Add message to GUI
+     *
+     * @param msg message to appear on GUI.
+     */
     private void addActionGUI(String msg) {
         if (gui != null) gui.addAction(msg);
     }
 
+    /**
+     * Update board GUI.
+     */
     private void updateBoardGUI() {
         gui.setBoard(board);
     }
 
+    /**
+     * Inform which player's turn.
+     */
     private class TurnBehaviour extends Behaviour {
         private boolean end = false;
 
+        /**
+         * Action to inform player's turn
+         */
         @Override
         public void action() {
             if (turns.size() != agent_amount) return;
@@ -130,15 +158,26 @@ public class GameController extends Agent {
             end = true;
         }
 
+        /**
+         * When action to inform is done.
+         *
+         * @return end of action.
+         */
         @Override
         public boolean done() {
             return end;
         }
     }
 
+    /**
+     * Receives questions of players and answers them.
+     */
     private class QueriesBehaviour extends Behaviour {
         private boolean end = false;
 
+        /**
+         * Action to receive questions of players and answers them.
+         */
         @Override
         public void action() {
             ACLMessage req = receive(MessageTemplate
@@ -188,6 +227,11 @@ public class GameController extends Agent {
 
         }
 
+        /**
+         * When action receive questions of players and answers them is done.
+         *
+         * @return end of action.
+         */
         @Override
         public boolean done() {
             return end;

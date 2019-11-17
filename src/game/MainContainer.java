@@ -8,13 +8,16 @@ import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
 /**
- * Has the main container of the game
+ * Has the main container of the game.
  */
-public class MainContainer {
+class MainContainer {
 
     private ContainerController mainContainer;
 
-    public MainContainer() {
+    /**
+     * Create main container of the game.
+     */
+    MainContainer() {
 
         Runtime rt = Runtime.instance();
         Profile p1 = new ProfileImpl();
@@ -23,20 +26,31 @@ public class MainContainer {
         mainContainer = rt.createMainContainer(p1);
     }
 
-    public ContainerController getController() {
-        return this.mainContainer;
-    }
-
-    public void setController(ContainerController cc) {
-        this.mainContainer = cc;
-    }
-
-    public AgentController createAgent(String name, String className) throws StaleProxyException {
+    /**
+     * Create a new agent.
+     *
+     * @param name      name of the agent.
+     * @param className name of class of the agent.
+     * @return New Agent
+     * @throws StaleProxyException
+     */
+    AgentController createAgent(String name, String className) throws StaleProxyException {
         Object[] args = new Object[0];
         return mainContainer.createNewAgent(name, className, args);
     }
 
-    public AgentController createAgent(String name, String className, int player_amount, int width, int height) throws StaleProxyException {
+    /**
+     * Create a new agent.
+     *
+     * @param name          name of the agent.
+     * @param className     name of class of the agent.
+     * @param player_amount number of players of the game.
+     * @param width         width of the map of the game.
+     * @param height        height of the map of the game.
+     * @return New Agent.
+     * @throws StaleProxyException
+     */
+    AgentController createAgent(String name, String className, int player_amount, int width, int height) throws StaleProxyException {
         Object[] args = new Object[3];
         args[0] = player_amount;
         args[1] = width;

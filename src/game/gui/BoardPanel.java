@@ -8,14 +8,27 @@ public class BoardPanel extends Canvas {
 
     private Board board;
 
-    public BoardPanel() {
+    /**
+     * Create board panel.
+     */
+    BoardPanel() {
         super();
     }
 
-    public void setBoard(Board board) {
+    /**
+     * Set board of board panel.
+     *
+     * @param board new board.
+     */
+    void setBoard(Board board) {
         this.board = board;
     }
 
+    /**
+     * Update board panel.
+     *
+     * @param g graphics of board.
+     */
     @Override
     public void update(Graphics g) {
         if (board == null) return;

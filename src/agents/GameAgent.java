@@ -69,30 +69,36 @@ public abstract class GameAgent extends Agent {
         }
         System.out.println("Agent " + getName() + ": Coords " + pos.get(0).getX() + "," + pos.get(0).getY() + "\n");
 
-        setInteractable_coordinates();
+        setInteractive_coordinates();
         setMy_cities();
 
         addBehaviour(new ReceiveTurn());
     }
 
-    private void setInteractable_coordinates() {
+    /**
+     * Set interactive coordinates.
+     */
+    private void setInteractive_coordinates() {
         this.interactable_coordinates = new ArrayList<>();
         for (Coordinate cord : this.pos) {
-            Coordinate adicionar = cord.getTop(this.width, this.height);
-            if (adicionar != null && !this.interactable_coordinates.contains(adicionar))
-                this.interactable_coordinates.add(adicionar);
-            adicionar = cord.getButton(this.width, this.height);
-            if (adicionar != null && !this.interactable_coordinates.contains(adicionar))
-                this.interactable_coordinates.add(adicionar);
-            adicionar = cord.getLeft(this.width, this.height);
-            if (adicionar != null && !this.interactable_coordinates.contains(adicionar))
-                this.interactable_coordinates.add(adicionar);
-            adicionar = cord.getRight(this.width, this.height);
-            if (adicionar != null && !this.interactable_coordinates.contains(adicionar))
-                this.interactable_coordinates.add(adicionar);
+            Coordinate coordinatesToAdd = cord.getTop(this.width, this.height);
+            if (coordinatesToAdd != null && !this.interactable_coordinates.contains(coordinatesToAdd))
+                this.interactable_coordinates.add(coordinatesToAdd);
+            coordinatesToAdd = cord.getButton(this.width, this.height);
+            if (coordinatesToAdd != null && !this.interactable_coordinates.contains(coordinatesToAdd))
+                this.interactable_coordinates.add(coordinatesToAdd);
+            coordinatesToAdd = cord.getLeft(this.width, this.height);
+            if (coordinatesToAdd != null && !this.interactable_coordinates.contains(coordinatesToAdd))
+                this.interactable_coordinates.add(coordinatesToAdd);
+            coordinatesToAdd = cord.getRight(this.width, this.height);
+            if (coordinatesToAdd != null && !this.interactable_coordinates.contains(coordinatesToAdd))
+                this.interactable_coordinates.add(coordinatesToAdd);
         }
     }
 
+    /**
+     * Set new cities.
+     */
     private void setMy_cities() {
         this.my_cities = new ArrayList<>();
         for (Coordinate cord : this.pos) {
@@ -100,27 +106,43 @@ public abstract class GameAgent extends Agent {
         }
     }
 
+    /**
+     * Get money of all player's cities.
+     */
     private void getTurnMoney() {
         for (City city : this.my_cities) {
             this.currentMoney += city.getMoneyProduced();
         }
     }
 
+    /**
+     * Logic of player's turn.
+     *
+     * @return list of new cities conquered.
+     */
     public abstract ArrayList<City> logic();
 
+    /**
+     * Take down agent.
+     */
     public void takeDown() {
         System.out.println("Exiting");
     }
 
+    /**
+     * Inform game controller and opponent that player conquered a new city.
+     *
+     * @param city city conquered.
+     */
     protected void thisCityIsNowMine(City city) {
         //TODO avisar o controller e o agent que comprei a cidade dele
     }
 
     /**
-     * Buy empty cities with empty cities money
+     * Buy empty cities with empty cities money.
      *
-     * @param new_cities cities that managed to get
-     * @return empty cities that managed to buy
+     * @param new_cities cities that managed to get.
+     * @return empty cities that managed to buy.
      */
     protected ArrayList<City> buyEmptyCities(ArrayList<City> new_cities) {
         for (City empty : this.empty_cities) {
@@ -138,7 +160,7 @@ public abstract class GameAgent extends Agent {
     }
 
     /**
-     * Upgrade cities with upgrade money
+     * Upgrade cities with upgrade money.
      */
     protected void upgradeCities() {
         Collections.sort(this.my_cities);
@@ -151,7 +173,7 @@ public abstract class GameAgent extends Agent {
     }
 
     /**
-     * Wasted all defenses money upgrading evenly every city you own
+     * Wasted all defenses money upgrading evenly every city you own.
      */
     protected void upgradeMyDefenses() {
         int amountOfDefenses = this.moneyToDefenses / this.my_cities.size();
@@ -163,7 +185,7 @@ public abstract class GameAgent extends Agent {
     }
 
     /**
-     * Tries to defend all cities from religion attacks using the money given
+     * Tries to defend all cities from religion attacks using the money given.
      */
     protected void defendReligion() {
         for (City my_city : this.my_cities) {
@@ -180,8 +202,14 @@ public abstract class GameAgent extends Agent {
         }
     }
 
+    /**
+     * Player's turn.
+     */
     private class ReceiveTurn extends CyclicBehaviour {
 
+        /**
+         * Action to play.
+         */
         @Override
         public void action() {
             ACLMessage turn = receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
@@ -191,11 +219,17 @@ public abstract class GameAgent extends Agent {
             }
         }
 
+        /**
+         * Action to handle player's turn.
+         */
         private void handleTurn() {
+            // Get turn money
             getTurnMoney();
+
+            // Request information about surroundings
             System.out.println("Agent " + getName() + ": My turn");
             StringBuilder ret = new StringBuilder("Which");
-            setInteractable_coordinates();
+            setInteractive_coordinates();
             for (Coordinate cord : interactable_coordinates) {
                 ret.append("|").append(cord);
             }
@@ -209,6 +243,7 @@ public abstract class GameAgent extends Agent {
             System.out.println("Agent " + getAgent().getName() +
                     ": Request Sent, " + msg.getContent());
 
+            // Get information about surroundings
             ACLMessage inform = blockingReceive(MessageTemplate.and(
                     MessageTemplate.MatchPerformative(ACLMessage.INFORM),
                     MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST)));
@@ -217,23 +252,28 @@ public abstract class GameAgent extends Agent {
             System.out.println("Agent " + getAgent().getName() +
                     ": Inform Received, " + inform.getContent());
 
+            // Process information about surroundings
             String[] content = inform.getContent().split("\\|");
             empty_cities = new ArrayList<>();
             interactable_cities = new ArrayList<>();
+
             for (int i = 0; i < content.length; i++) {
                 int x = interactable_coordinates.get(i).getX();
                 int y = interactable_coordinates.get(i).getY();
-                // Espaço vazio
+
+                // Empty city
                 if (content[i].equals("Empty")) {
                     System.out.println("Agent " + getAgent().getName() +
                             ": Position - " + x + "," + y + " is empty.");
                     empty_cities.add(new City(null, new Coordinate(x, y)));
                 }
-                // Espaço inválido
+
+                // Invalid coordinates (outside of map)
                 else if (content[i].equals("Null"))
                     System.out.println("Agent " + getAgent().getName() +
                             ": Position - " + x + "," + y + " doesn't exist.");
-                    // Existe um jogador
+
+                    // Opponent city.
                 else {
                     try {
                         StringACLCodec codec = new StringACLCodec(new StringReader(content[i]), null);
@@ -255,6 +295,7 @@ public abstract class GameAgent extends Agent {
             // precisar de perguntar ao controller o preço da cidade
             ArrayList<City> new_cities = logic();
 
+            // Update game controller about conquered cities.
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);
             msg.setContent("Update");
