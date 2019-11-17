@@ -126,7 +126,7 @@ public abstract class GameAgent extends Agent {
      * Take down agent.
      */
     public void takeDown() {
-        System.out.println("Exiting");
+        System.out.println("Agent " + getName() + ": No active cities. Game over");
     }
 
     /**
@@ -226,6 +226,12 @@ public abstract class GameAgent extends Agent {
          * Action to handle player's turn.
          */
         private void handleTurn() {
+
+            if(my_cities.isEmpty()) {
+                doDelete();
+                takeDown();
+            }
+
             // Get turn money
             getTurnMoney();
 
@@ -280,7 +286,7 @@ public abstract class GameAgent extends Agent {
                 else {
                     try {
                         StringACLCodec codec = new StringACLCodec(new StringReader(content[i]), null);
-                        AID opponent = codec.decodeAID(); //jogador
+                        AID opponent = codec.decodeAID(); // player
                         System.out.println("Agent " + getAgent().getName() +
                                 ": Position - " + x + "," + y + " it's occupied by " +
                                 opponent.getName());
@@ -293,9 +299,6 @@ public abstract class GameAgent extends Agent {
                 }
             }
 
-            // TODO: implementar lógica especifica a cada tipo de jogador
-            // é possivel que se tenha de altera qualquer coisa porque o economist vai
-            // precisar de perguntar ao controller o preço da cidade
             ArrayList<City> new_cities = logic();
 
             // Update game controller about conquered cities.
@@ -304,8 +307,7 @@ public abstract class GameAgent extends Agent {
                 Coordinate cord = city.getCoordinates();
                 upd.append("|").append(cord);
             }
-
-            System.out.println("\n\n\n" + upd + "\n\n\n");
+            upd.append("|");
 
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);

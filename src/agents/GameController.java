@@ -55,6 +55,10 @@ public class GameController extends Agent {
 
         addBehaviour(new SubscriptionInitiator(this, DFService.createSubscriptionMessage(this, getDefaultDF(), dfd, sc)) {
 
+            /**
+             * Inform if players joined
+             * @param inform message
+             */
             protected void handleInform(ACLMessage inform) {
                 System.out.println("Agent " + getLocalName() + ": Notification received from DF");
                 try {
@@ -188,21 +192,26 @@ public class GameController extends Agent {
 
             System.out.println("Agent " + getLocalName() + ": " + req.getPerformative() + " received from " + req.getSender().getName() + ". Action is " + req.getContent());
 
-            String[] param = req.getContent().split(" ");
+            String[] param = req.getContent().split("\\|");
             AID p = req.getSender();
             if (param[0].equals("Update") && req.getPerformative() == ACLMessage.INFORM) {
-                // TODO: Update received, atualizar informações
+                for (int i = 1; i < param.length; i++) {
+                    String[] coordinates = param[i].split("_");
+                    board.setCityOwner(Integer.parseInt(coordinates[0]), Integer.parseInt(coordinates[1]), p);
+                }
+                updateBoardGUI();
                 end = true;
                 return;
             }
-
 
             ACLMessage inform = req.createReply();
             inform.setPerformative(ACLMessage.INFORM);
             StringBuilder res = new StringBuilder();
 
             String[] content = req.getContent().split("\\|");
-            for (int i = 1; i < content.length; i++) {
+            for (
+                    int i = 1;
+                    i < content.length; i++) {
                 String[] coords = content[i].split("_");
                 int x = Integer.parseInt(coords[0]);
                 int y = Integer.parseInt(coords[1]);
@@ -222,8 +231,13 @@ public class GameController extends Agent {
             }
 
             inform.setContent(res.toString());
+
             send(inform);
-            System.out.println("Agent " + getLocalName() + ": INFORM sent to " + req.getSender().getName() + ", " + res);
+            System.out.println("Agent " +
+
+                    getLocalName() + ": INFORM sent to " + req.getSender().
+
+                    getName() + ", " + res);
 
         }
 
