@@ -54,7 +54,7 @@ public class EconomicsAgent extends GameAgent {
      * @return new cities that managed to buy
      */
     private ArrayList<City> buyOpponentsCities(ArrayList<City> my_new_cities) {
-        for (City city : this.interactable_cities) {
+        for (City city : this.interactive_cities) {
             if (this.moneyToAttack >= city.getCity_price()) {
                 this.moneyToAttack -= city.getCity_price();
                 city.setOwner(this.getAID());

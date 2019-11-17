@@ -23,10 +23,10 @@ import java.util.Collections;
 public abstract class GameAgent extends Agent {
 
     protected ArrayList<Coordinate> pos = new ArrayList<>();
-    private ArrayList<Coordinate> interactable_coordinates;
+    private ArrayList<Coordinate> interactive_coordinates;
 
     protected ArrayList<City> my_cities;
-    protected ArrayList<City> interactable_cities;
+    protected ArrayList<City> interactive_cities;
     private ArrayList<City> empty_cities;
 
     private AID controller;
@@ -79,20 +79,20 @@ public abstract class GameAgent extends Agent {
      * Set interactive coordinates.
      */
     private void setInteractive_coordinates() {
-        this.interactable_coordinates = new ArrayList<>();
+        this.interactive_coordinates = new ArrayList<>();
         for (Coordinate cord : this.pos) {
             Coordinate coordinatesToAdd = cord.getTop(this.width, this.height);
-            if (coordinatesToAdd != null && !this.interactable_coordinates.contains(coordinatesToAdd))
-                this.interactable_coordinates.add(coordinatesToAdd);
+            if (coordinatesToAdd != null && !this.interactive_coordinates.contains(coordinatesToAdd))
+                this.interactive_coordinates.add(coordinatesToAdd);
             coordinatesToAdd = cord.getButton(this.width, this.height);
-            if (coordinatesToAdd != null && !this.interactable_coordinates.contains(coordinatesToAdd))
-                this.interactable_coordinates.add(coordinatesToAdd);
+            if (coordinatesToAdd != null && !this.interactive_coordinates.contains(coordinatesToAdd))
+                this.interactive_coordinates.add(coordinatesToAdd);
             coordinatesToAdd = cord.getLeft(this.width, this.height);
-            if (coordinatesToAdd != null && !this.interactable_coordinates.contains(coordinatesToAdd))
-                this.interactable_coordinates.add(coordinatesToAdd);
+            if (coordinatesToAdd != null && !this.interactive_coordinates.contains(coordinatesToAdd))
+                this.interactive_coordinates.add(coordinatesToAdd);
             coordinatesToAdd = cord.getRight(this.width, this.height);
-            if (coordinatesToAdd != null && !this.interactable_coordinates.contains(coordinatesToAdd))
-                this.interactable_coordinates.add(coordinatesToAdd);
+            if (coordinatesToAdd != null && !this.interactive_coordinates.contains(coordinatesToAdd))
+                this.interactive_coordinates.add(coordinatesToAdd);
         }
     }
 
@@ -230,7 +230,7 @@ public abstract class GameAgent extends Agent {
             System.out.println("Agent " + getName() + ": My turn");
             StringBuilder ret = new StringBuilder("Which");
             setInteractive_coordinates();
-            for (Coordinate cord : interactable_coordinates) {
+            for (Coordinate cord : interactive_coordinates) {
                 ret.append("|").append(cord);
             }
 
@@ -255,11 +255,11 @@ public abstract class GameAgent extends Agent {
             // Process information about surroundings
             String[] content = inform.getContent().split("\\|");
             empty_cities = new ArrayList<>();
-            interactable_cities = new ArrayList<>();
+            interactive_cities = new ArrayList<>();
 
             for (int i = 0; i < content.length; i++) {
-                int x = interactable_coordinates.get(i).getX();
-                int y = interactable_coordinates.get(i).getY();
+                int x = interactive_coordinates.get(i).getX();
+                int y = interactive_coordinates.get(i).getY();
 
                 // Empty city
                 if (content[i].equals("Empty")) {
@@ -283,7 +283,7 @@ public abstract class GameAgent extends Agent {
                                 opponent.getName());
                         City opponent_city = new City(opponent, new Coordinate(x, y));
                         //TODO é preciso mais informação sobre a cidade, costo da cidade, religião que eu tenho agora
-                        interactable_cities.add(opponent_city);
+                        interactive_cities.add(opponent_city);
                     } catch (ACLCodec.CodecException e) {
                         e.printStackTrace();
                     }
@@ -296,9 +296,15 @@ public abstract class GameAgent extends Agent {
             ArrayList<City> new_cities = logic();
 
             // Update game controller about conquered cities.
+            StringBuilder upd = new StringBuilder("Update");
+            for (City city : new_cities) {
+                Coordinate cord = city.getCoordinates();
+                upd.append("|").append(cord);
+            }
+
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);
-            msg.setContent("Update");
+            msg.setContent(upd.toString());
             send(msg);
 
             System.out.println("Agent " + getAgent().getName() +

@@ -56,9 +56,9 @@ public class ReligiousAgent extends GameAgent {
      * @return new cities that managed to buy
      */
     private ArrayList<City> attackReligion(ArrayList<City> my_new_cities) {
-        if (!this.interactable_cities.isEmpty()) {
+        if (!this.interactive_cities.isEmpty()) {
             System.out.println("Agent " + getName() + ": Converting opponent cities");
-            for (City interacting_city : this.interactable_cities) {
+            for (City interacting_city : this.interactive_cities) {
                 //TODO atualizar a cidade que estou a interazir com os valores novos de religião
             }
         }
