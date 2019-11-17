@@ -57,6 +57,7 @@ public class EconomicsAgent extends GameAgent {
      */
     private ArrayList<City> buyOpponentsCities(ArrayList<City> my_new_cities) {
         for (City city : this.interactive_cities) {
+            // TODO enviar pedido a perguntar o preço da cidade e receber o valor da mesma para ser usado em baixo em vez de diretamente
             if (this.moneyToAttack >= city.getCity_price()) {
                 this.moneyToAttack -= city.getCity_price();
                 city.setOwner(this.getAID());
@@ -64,6 +65,7 @@ public class EconomicsAgent extends GameAgent {
                 this.my_cities.add(city);
                 this.pos.add(city.getCoordinates());
                 my_new_cities.add(city);
+                // TODO enviar inform a dizer que a cidade foi comprada para ele retirar da sua lista
             }
         }
         return my_new_cities;

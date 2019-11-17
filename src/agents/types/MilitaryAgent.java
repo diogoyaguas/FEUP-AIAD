@@ -55,6 +55,7 @@ public class MilitaryAgent extends GameAgent {
             System.out.println("Agent " + getName() + ": Attacking opponents");
             int attackers = getTotalOfDefenses() - 10;
             for (City interacting_city : this.interactive_cities) {
+                // TODO enviar a dizer que a cidade vai ser atacada com o número de attackers e receber a dizer se o número da defesa da cidade para ser usado em baixo
                 if (attackers >= interacting_city.getDefences()) {
                     System.out.println("Agent " + getName() + ": Getting new city from " + interacting_city.getOwner().getName());
                     attackers -= interacting_city.getDefences();
@@ -62,6 +63,7 @@ public class MilitaryAgent extends GameAgent {
                     this.thisCityIsNowMine(interacting_city);
                     this.my_cities.add(interacting_city);
                     my_new_cities.add(interacting_city);
+                    // TODO enviar a informar que a cidade foi conquistada para ele retirar da sua lista
                 }
             }
             attackers += 10;
