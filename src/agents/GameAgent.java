@@ -281,24 +281,24 @@ public abstract class GameAgent extends Agent {
 
                 // Empty city
                 if (content[i].equals("Empty")) {
-                    System.out.println("Agent " + getAgent().getName() +
-                            ": Position - " + x + "," + y + " is empty.");
+//                    System.out.println("Agent " + getAgent().getName() +
+//                            ": Position - " + x + "," + y + " is empty.");
                     empty_cities.add(new City(null, new Coordinate(x, y)));
                 }
 
                 // Invalid coordinates (outside of map)
                 else if (content[i].equals("Null"))
-                    System.out.println("Agent " + getAgent().getName() +
-                            ": Position - " + x + "," + y + " doesn't exist.");
+//                    System.out.println("Agent " + getAgent().getName() +
+//                            ": Position - " + x + "," + y + " doesn't exist.");
 
                     // Opponent city.
                 else {
                     try {
                         StringACLCodec codec = new StringACLCodec(new StringReader(content[i]), null);
                         AID opponent = codec.decodeAID(); // player
-                        System.out.println("Agent " + getAgent().getName() +
-                                ": Position - " + x + "," + y + " it's occupied by " +
-                                opponent.getName());
+//                        System.out.println("Agent " + getAgent().getName() +
+//                                ": Position - " + x + "," + y + " it's occupied by " +
+//                                opponent.getName());
                         City opponent_city = new City(opponent, new Coordinate(x, y));
                         //TODO é preciso mais informação sobre a cidade, costo da cidade, religião que eu tenho agora
                         interactive_cities.add(opponent_city);
