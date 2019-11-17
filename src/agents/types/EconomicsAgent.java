@@ -12,32 +12,46 @@ public class EconomicsAgent extends GameAgent {
 
         ArrayList<City> my_new_cities = new ArrayList<>();
 
-        my_new_cities = buyEmptyCities(my_new_cities, this.current_money);
+        // Buy empty cities
+        this.moneyToBuyEmptyCities = this.currentMoney;
+        my_new_cities = buyEmptyCities(my_new_cities);
 
-        int money_for_upgrading = this.current_money / 4;
-        int money_for_attacking = money_for_upgrading;
-        int money_for_defenses = money_for_upgrading;
-        int money_for_religion = money_for_upgrading;
-        this.current_money = 0;
-        money_for_upgrading += this.defendReligion(money_for_religion);
+        // Distribute the remaining money
+        this.moneyToUpgrade = this.currentMoney / 4;
+        this.moneyToAttack = this.moneyToUpgrade;
+        this.moneyToDefenses = this.moneyToUpgrade;
+        this.moneyToReligion = this.moneyToUpgrade;
+        this.currentMoney = 0;
 
-        my_new_cities = buyOpponentsCities(my_new_cities, money_for_attacking);
+        // Defend their cities from religious attacks
+        defendReligion();
+        this.currentMoney += this.moneyToReligion;
 
-        this.current_money += money_for_attacking;
-        this.upgradeMyDefenses(money_for_defenses);
-        this.current_money += money_for_defenses;
+        // Buy opponents cities
+        my_new_cities = buyOpponentsCities(my_new_cities);
+        this.currentMoney += this.moneyToAttack;
 
-        upgradeCities(money_for_upgrading);
+        // Upgrade their defenses
+        this.upgradeMyDefenses();
+        this.currentMoney += this.moneyToDefenses;
 
-        this.current_money += money_for_upgrading;
+        // Upgrade their cities
+        upgradeCities();
+        this.currentMoney += this.moneyToUpgrade;
 
         return my_new_cities;
     }
 
-    private ArrayList<City> buyOpponentsCities(ArrayList<City> my_new_cities, int money_for_attacking) {
+    /**
+     * Try to buy opponents cities.
+     *
+     * @param my_new_cities cities that managed to buy
+     * @return new cities that managed to buy
+     */
+    private ArrayList<City> buyOpponentsCities(ArrayList<City> my_new_cities) {
         for (City city : this.interactable_cities) {
-            if (money_for_attacking >= city.getCity_price()) {
-                money_for_attacking -= city.getCity_price();
+            if (this.moneyToAttack >= city.getCity_price()) {
+                this.moneyToAttack -= city.getCity_price();
                 city.setOwner(this.getAID());
                 this.thisCityIsNowMine(city);
                 this.my_cities.add(city);

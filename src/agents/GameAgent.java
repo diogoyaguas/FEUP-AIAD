@@ -23,22 +23,30 @@ import java.util.Collections;
 public abstract class GameAgent extends Agent {
 
     protected ArrayList<Coordinate> pos = new ArrayList<>();
+    private ArrayList<Coordinate> interactable_coordinates;
+
+    protected ArrayList<City> my_cities;
+    protected ArrayList<City> interactable_cities;
+    private ArrayList<City> empty_cities;
+
     private AID controller;
+
     private int width;
     private int height;
-    protected ArrayList<City> my_cities;
-    protected int current_money;
-    private ArrayList<City> empty_cities;
-    protected ArrayList<City> interactable_cities;
 
-    private ArrayList<Coordinate> interactable_coordinates;
+    protected int currentMoney;
+    protected int moneyToUpgrade;
+    protected int moneyToDefenses;
+    protected int moneyToBuyEmptyCities;
+    protected int moneyToAttack;
+    protected int moneyToReligion;
 
     /**
      * Creates the agent and receives a coordinate for the starting position
      */
     public void setup() {
         Object[] args = getArguments();
-        this.current_money = 0;
+        this.currentMoney = 0;
         System.out.println("Setting up agent");
         this.width = (int) args[0];
         this.height = (int) args[1];
@@ -94,7 +102,7 @@ public abstract class GameAgent extends Agent {
 
     private void getTurnMoney() {
         for (City city : this.my_cities) {
-            this.current_money += city.getMoneyProduced();
+            this.currentMoney += city.getMoneyProduced();
         }
     }
 
@@ -108,12 +116,18 @@ public abstract class GameAgent extends Agent {
         //TODO avisar o controller e o agent que comprei a cidade dele
     }
 
-    protected ArrayList<City> buyEmptyCities(ArrayList<City> new_cities, int moneyToSpent) {
+    /**
+     * Buy empty cities with empty cities money
+     *
+     * @param new_cities cities that managed to get
+     * @return empty cities that managed to buy
+     */
+    protected ArrayList<City> buyEmptyCities(ArrayList<City> new_cities) {
         for (City empty : this.empty_cities) {
-            if (moneyToSpent >= empty.getCity_price()) {
+            if (this.moneyToBuyEmptyCities >= empty.getCity_price()) {
                 System.out.println("Agent " + getName() + ": Getting a new city");
-                this.current_money -= empty.getCity_price();
-                moneyToSpent -= empty.getCity_price();
+                this.currentMoney -= empty.getCity_price();
+                this.moneyToBuyEmptyCities -= empty.getCity_price();
                 empty.setOwner(this.getAID());
                 empty.reset();
                 this.my_cities.add(empty);
@@ -123,49 +137,47 @@ public abstract class GameAgent extends Agent {
         return new_cities;
     }
 
-    protected void upgradeCities(int moneyToUpgradeCities) {
+    /**
+     * Upgrade cities with upgrade money
+     */
+    protected void upgradeCities() {
         Collections.sort(this.my_cities);
         for (City my_city : this.my_cities) {
-            if (moneyToUpgradeCities >= my_city.getCostUpgrade()) {
-                moneyToUpgradeCities -= my_city.getCostUpgrade();
+            if (this.moneyToUpgrade >= my_city.getCostUpgrade()) {
+                this.moneyToUpgrade -= my_city.getCostUpgrade();
                 my_city.upgradeCity();
             }
         }
     }
 
     /**
-     * Wasted all money upgrading evenly every city you own
-     *
-     * @param moneyToDefenses The money I want to waste defending my cities
+     * Wasted all defenses money upgrading evenly every city you own
      */
-    protected void upgradeMyDefenses(int moneyToDefenses) {
-        int amountOfDefenses = moneyToDefenses / this.my_cities.size();
+    protected void upgradeMyDefenses() {
+        int amountOfDefenses = this.moneyToDefenses / this.my_cities.size();
         System.out.println("Agent " + getName() + ": Increasing defenses");
         for (City my_cities : this.my_cities) {
+            this.moneyToDefenses -= amountOfDefenses;
             my_cities.addDefences(amountOfDefenses);
         }
     }
 
     /**
      * Tries to defend all cities from religion attacks using the money given
-     *
-     * @param money_to_waste The money used to defend cities against religion attacks
-     * @return The money not wasted
      */
-    protected int defendReligion(int money_to_waste) {
+    protected void defendReligion() {
         for (City my_city : this.my_cities) {
             my_city.sortReligionAttackers();
             for (int i = 0; i < my_city.getReligion_attacker().size(); i++) {
                 int current_amount = my_city.getReligion_attacker().get(i).getValue();
                 if (current_amount >= 50) current_amount = 50;
                 int cost = my_city.costOfReligion(current_amount);
-                if (money_to_waste >= cost) {
-                    money_to_waste -= cost;
+                if (this.moneyToReligion >= cost) {
+                    this.moneyToReligion -= cost;
                     my_city.getReligion_attacker().set(i, new Pair<>(my_city.getReligion_attacker().get(i).getKey(), my_city.getReligion_attacker().get(i).getValue() - current_amount));
                 }
             }
         }
-        return money_to_waste;
     }
 
     private class ReceiveTurn extends CyclicBehaviour {

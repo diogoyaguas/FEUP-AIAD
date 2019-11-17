@@ -9,26 +9,41 @@ public class MilitaryAgent extends GameAgent {
 
     @Override
     public ArrayList<City> logic() {
+
         ArrayList<City> my_new_cities;
 
-        int moneyToBuyDefenses = 3 * (this.current_money / 4);
-        upgradeMyDefenses(moneyToBuyDefenses);
-        this.current_money -= moneyToBuyDefenses;
+        // Upgrade their defenses
+        this.moneyToDefenses = 3 * (this.currentMoney / 4);
+        this.currentMoney -= this.moneyToDefenses;
+        upgradeMyDefenses();
+        this.currentMoney += this.moneyToDefenses;
 
+        // Attack opponents 'cities by gathering all of their cities' defenses
+        // and in the end redistributes all remaining defenses by their cities
         my_new_cities = attackOpponentCities();
 
-        int moneyToBuyEmptyCities = this.current_money / 2;
-        this.current_money -= moneyToBuyEmptyCities;
-        my_new_cities = buyEmptyCities(my_new_cities, moneyToBuyEmptyCities);
+        // Buy empty cities
+        this.moneyToBuyEmptyCities = this.currentMoney / 2;
+        this.currentMoney -= this.moneyToBuyEmptyCities;
+        my_new_cities = buyEmptyCities(my_new_cities);
+        this.currentMoney += this.moneyToBuyEmptyCities;
 
-        int moneyToUpgradeCities = this.current_money;
-        this.current_money -= moneyToUpgradeCities;
-        upgradeCities(moneyToUpgradeCities);
+        // Upgrade their cities
+        this.moneyToUpgrade = this.currentMoney;
+        this.currentMoney -= this.moneyToUpgrade;
+        upgradeCities();
+        this.currentMoney += this.moneyToUpgrade;
 
         return my_new_cities;
 
     }
 
+    /**
+     * Attack opponents 'cities by gathering all of their cities' defenses
+     * and in the end redistributes all remaining defenses by their cities
+     *
+     * @return cities that managed to win
+     */
     private ArrayList<City> attackOpponentCities() {
         ArrayList<City> my_new_cities = new ArrayList<>();
         if (!this.interactable_cities.isEmpty()) {
@@ -50,6 +65,11 @@ public class MilitaryAgent extends GameAgent {
         return my_new_cities;
     }
 
+    /**
+     * Unite all defenses of all cities
+     *
+     * @return total of defenses
+     */
     private int getTotalOfDefenses() {
         int total = 0;
         for (City my_cities : this.my_cities) {
@@ -58,6 +78,11 @@ public class MilitaryAgent extends GameAgent {
         return total;
     }
 
+    /**
+     * Redistributes all defenses across cities
+     *
+     * @param amountOfDefenses Rest of defenses after attacking cities
+     */
     private void redistributeDefenses(int amountOfDefenses) {
         for (City my_cities : this.my_cities) {
             my_cities.addDefences(amountOfDefenses);

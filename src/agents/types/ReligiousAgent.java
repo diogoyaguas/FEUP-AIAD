@@ -9,29 +9,48 @@ public class ReligiousAgent extends GameAgent {
 
     @Override
     public ArrayList<City> logic() {
+
         ArrayList<City> my_new_cities = new ArrayList<>();
 
-        int moneyForDefenseReligion = this.current_money / 4;
-        int moneyForAttackReligion = moneyForDefenseReligion;
-        int moneyToBuyDefenses = moneyForDefenseReligion;
-        int moneyForUpgrading = moneyForDefenseReligion;
-        this.current_money = 0;
+        // Distribute money for strategy
+        this.moneyToReligion = this.currentMoney / 4;
+        this.moneyToAttack = this.moneyToReligion;
+        this.moneyToDefenses = this.moneyToReligion;
+        this.moneyToUpgrade = this.moneyToReligion;
+        this.currentMoney = 0;
 
-        this.current_money += defendReligion(moneyForDefenseReligion);
+        // Defend their cities from religious attacks
+        defendReligion();
+        this.currentMoney += this.moneyToReligion;
 
-        my_new_cities = attackReligion(my_new_cities, moneyForAttackReligion);
+        // Attack opponent cities with religious attacks
+        my_new_cities = attackReligion(my_new_cities);
+        this.currentMoney += this.moneyToAttack;
 
-        upgradeMyDefenses(moneyToBuyDefenses);
+        // Upgrade their defenses
+        upgradeMyDefenses();
+        this.currentMoney += this.moneyToDefenses;
 
-        int moneyToBuyEmptyCities = moneyForUpgrading / 2;
-        my_new_cities = buyEmptyCities(my_new_cities, moneyToBuyEmptyCities);
+        // Buy empty cities
+        this.moneyToBuyEmptyCities = this.moneyToUpgrade / 2;
+        this.moneyToUpgrade -= this.moneyToBuyEmptyCities;
+        my_new_cities = buyEmptyCities(my_new_cities);
+        this.moneyToUpgrade += this.moneyToBuyEmptyCities;
 
-        int moneyToUpgradeCities = moneyForUpgrading / 2;
-        upgradeCities(moneyToUpgradeCities);
+        // Upgrade their cities
+        upgradeCities();
+        this.currentMoney += this.moneyToUpgrade;
+
         return my_new_cities;
     }
 
-    private ArrayList<City> attackReligion(ArrayList<City> my_new_cities, int moneyForAttackReligion) {
+    /**
+     * Attack opponent cities with religious attacks
+     *
+     * @param my_new_cities cities that managed to buy
+     * @return new cities that managed to buy
+     */
+    private ArrayList<City> attackReligion(ArrayList<City> my_new_cities) {
         if (!this.interactable_cities.isEmpty()) {
             System.out.println("Agent " + getName() + ": Converting opponent cities");
             for (City interacting_city : this.interactable_cities) {
