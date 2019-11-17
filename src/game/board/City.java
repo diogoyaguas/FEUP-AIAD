@@ -8,12 +8,11 @@ import java.util.ArrayList;
 
 public class City implements Comparable {
 
+    private static int maximum_level = 10;
     private AID owner;
     private Coordinate my_cords;
-
     private int city_price;
     private int current_level;
-    private static int maximum_level = 10;
     private int cost_to_upgrade;
 
     private int amount_money_producing;
@@ -107,6 +106,11 @@ public class City implements Comparable {
         city_price = 10;
     }
 
+    public void resetReligion()
+    {
+        religion_attacker=new ArrayList<>();
+    }
+
     /**
      * Convert city to a new owner.
      *
@@ -196,6 +200,13 @@ public class City implements Comparable {
      */
     public ArrayList<Pair<AID, Integer>> getReligion_attacker() {
         return religion_attacker;
+    }
+
+    public void setReligionAttacker(int index,Pair<AID,Integer> pair)
+    {
+        if(index!=-1)
+            this.religion_attacker.remove(index);
+        this.religion_attacker.add(pair);
     }
 
     /**
