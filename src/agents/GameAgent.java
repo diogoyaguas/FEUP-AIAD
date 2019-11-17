@@ -3,7 +3,9 @@ package agents;
 import game.board.City;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.ParallelBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
@@ -72,7 +74,11 @@ public abstract class GameAgent extends Agent {
         setInteractive_coordinates();
         setMy_cities();
 
-        addBehaviour(new ReceiveTurn());
+        ParallelBehaviour pb = new ParallelBehaviour(ParallelBehaviour.WHEN_ALL);
+        pb.addSubBehaviour(new ReceiveTurn());
+        pb.addSubBehaviour(new ListenPlayers());
+
+        addBehaviour(pb);
     }
 
     /**
@@ -215,7 +221,10 @@ public abstract class GameAgent extends Agent {
          */
         @Override
         public void action() {
-            ACLMessage turn = receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+            ACLMessage turn = receive(MessageTemplate.and(
+                    MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+                    MessageTemplate.MatchSender(controller)
+            ));
             if (turn == null) return;
             if (turn.getContent().equals("Turn")) {
                 handleTurn();
@@ -252,11 +261,11 @@ public abstract class GameAgent extends Agent {
             System.out.println("Agent " + getAgent().getName() +
                     ": Request Sent, " + msg.getContent());
 
-            // Get information about surroundings
-            ACLMessage inform = blockingReceive(MessageTemplate.and(
-                    MessageTemplate.MatchPerformative(ACLMessage.INFORM),
-                    MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST)));
-
+                // Get information about surroundings
+            ACLMessage inform = blockingReceive(MessageTemplate.and(MessageTemplate.and(
+                        MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+                        MessageTemplate.MatchSender(controller)),
+                        MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST)));
 
             System.out.println("Agent " + getAgent().getName() +
                     ": Inform Received, " + inform.getContent());
@@ -316,6 +325,19 @@ public abstract class GameAgent extends Agent {
 
             System.out.println("Agent " + getAgent().getName() +
                     ": Update Sent");
+
+        }
+    }
+
+    private class ListenPlayers extends CyclicBehaviour {
+        @Override
+        public void action() {
+            ACLMessage msg = receive(MessageTemplate.and(
+                    MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+                    MessageTemplate.not(MessageTemplate.MatchSender(controller))
+            ));
+            if (msg == null) return;
+            //TODO: handle player question
 
         }
     }
