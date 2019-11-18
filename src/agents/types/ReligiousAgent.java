@@ -64,17 +64,19 @@ public class ReligiousAgent extends GameAgent {
     private ArrayList<City> attackReligion(ArrayList<City> my_new_cities) {
         if (!this.interactive_cities.isEmpty()) {
             for (City interacting_city : this.interactive_cities) {
+                if(interacting_city.getOwner() == getAID()) continue;
                 int current_my_religion = 0;
                 int i = 0;
-                boolean exists = false;
-                //TODO ask for my current religion
-                if (!exists)
+                current_my_religion = requestCityReligion(interacting_city);
+                if(current_my_religion == -1) {
                     i = -1;
+                    current_my_religion = 0;
+                }
+
                 int value_to_attack = 100 - current_my_religion;
                 if (value_to_attack > 50) value_to_attack = 50;
-                //TODO cost to attack é o cost de value_to_attack naquela cidade. Eu posso perguntar para o outro agente calcular
-                //TODO ou posso pedir informações para eu calcular, mais facil é pedir para ele calcular o valor por mim. Substituir linha a baixo
-                int cost_to_attack = interacting_city.costOfReligion(value_to_attack);
+
+                int cost_to_attack = requestCostToAttack(interacting_city, value_to_attack);
                 if (this.moneyToAttack >= cost_to_attack) {
                     this.moneyToAttack -= cost_to_attack;
                     if (current_my_religion + value_to_attack >= 100) {
@@ -84,8 +86,7 @@ public class ReligiousAgent extends GameAgent {
                         this.my_cities.add(interacting_city);
                         my_new_cities.add(interacting_city);
                     } else {
-                        interacting_city.setReligionAttacker(i, new Pair<AID, Integer>(this.getAID(), current_my_religion + value_to_attack));
-                        //TODO avisar a outra cidade que estou a mudar o valor
+                        sendReligionAttack(interacting_city, i, current_my_religion + value_to_attack);
                     }
                 }
             }
@@ -104,5 +105,25 @@ public class ReligiousAgent extends GameAgent {
                 MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
 
         return Integer.parseInt(res.getContent());
+    }
+
+    private int requestCostToAttack(City city, int value) {
+        ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
+        req.addReceiver(city.getOwner());
+        req.setContent("CostToAttack|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY() + "|" + value);
+        send(req);
+
+        ACLMessage res = blockingReceive(MessageTemplate.and(
+                MessageTemplate.MatchSender(city.getOwner()),
+                MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
+
+        return Integer.parseInt(res.getContent());
+    }
+
+    private void sendReligionAttack(City city, int i, int value) {
+        ACLMessage req = new ACLMessage(ACLMessage.INFORM);
+        req.addReceiver(city.getOwner());
+        req.setContent("ReligionAttack|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY() + "|" + i + "|" + value);
+        send(req);
     }
 }
