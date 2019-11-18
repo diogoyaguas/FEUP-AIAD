@@ -63,7 +63,6 @@ public class ReligiousAgent extends GameAgent {
      */
     private ArrayList<City> attackReligion(ArrayList<City> my_new_cities) {
         if (!this.interactive_cities.isEmpty()) {
-            System.out.println("Agent " + getName() + ": Converting opponent cities");
             for (City interacting_city : this.interactive_cities) {
                 int current_my_religion = 0;
                 int i = 0;

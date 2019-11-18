@@ -54,7 +54,6 @@ public class MilitaryAgent extends GameAgent {
     private ArrayList<City> attackOpponentCities() {
         ArrayList<City> my_new_cities = new ArrayList<>();
         if (!this.interactive_cities.isEmpty()) {
-            System.out.println("Agent " + getName() + ": Attacking opponents");
             int attackers = getTotalOfDefenses() - 10;
             for (City interacting_city : this.interactive_cities) {
                 int defenses = requestCityDefense(interacting_city);
