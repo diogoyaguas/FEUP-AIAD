@@ -72,9 +72,13 @@ public class Game {
             System.out.print("::: ");
             height = number.next();
         }
-
         this.width = Integer.parseInt(width);
         this.height = Integer.parseInt(height);
+
+        if (this.width < Math.sqrt(this.player_amount) || this.height < Math.sqrt(this.player_amount)) {
+            this.width = (int) (Math.ceil(Math.sqrt(this.player_amount)));
+            this.height = (int) (Math.ceil(Math.sqrt(this.player_amount)));
+        }
 
     }
 

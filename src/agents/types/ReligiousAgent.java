@@ -2,10 +2,8 @@ package agents.types;
 
 import agents.GameAgent;
 import game.board.City;
-import jade.core.AID;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
 
@@ -64,11 +62,11 @@ public class ReligiousAgent extends GameAgent {
     private ArrayList<City> attackReligion(ArrayList<City> my_new_cities) {
         if (!this.interactive_cities.isEmpty()) {
             for (City interacting_city : this.interactive_cities) {
-                if(interacting_city.getOwner() == getAID()) continue;
+                if (interacting_city.getOwner() == getAID()) continue;
                 int current_my_religion = 0;
                 int i = 0;
                 current_my_religion = requestCityReligion(interacting_city);
-                if(current_my_religion == -1) {
+                if (current_my_religion == -1) {
                     i = -1;
                     current_my_religion = 0;
                 }

@@ -142,7 +142,7 @@ public abstract class GameAgent extends Agent {
      */
     protected void thisCityIsNowMine(City city) {
         ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
-        if(city.getOwner() != null && !city.getOwner().equals(getAID())) msg.addReceiver(city.getOwner());
+        if (city.getOwner() != null && !city.getOwner().equals(getAID())) msg.addReceiver(city.getOwner());
         msg.addReceiver(controller);
         msg.setContent("Mine|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY());
         send(msg);
@@ -294,13 +294,14 @@ public abstract class GameAgent extends Agent {
                 }
 
                 // Invalid coordinates (outside of map)
-                else if (content[i].equals("Null")) {}
+                else if (content[i].equals("Null")) {
+                }
                 // Opponent city.
                 else {
                     try {
                         StringACLCodec codec = new StringACLCodec(new StringReader(content[i]), null);
                         AID opponent = codec.decodeAID(); // player
-                        if(opponent.equals(getAID())) continue;
+                        if (opponent.equals(getAID())) continue;
                         City opponent_city = new City(opponent, new Coordinate(x, y));
                         interactive_cities.add(opponent_city);
                     } catch (ACLCodec.CodecException e) {
@@ -337,46 +338,44 @@ public abstract class GameAgent extends Agent {
                     MessageTemplate.not(MessageTemplate.MatchSender(controller))
             ));
             if (msg == null) return;
-            if(msg.getPerformative() == ACLMessage.REQUEST) {
+            if (msg.getPerformative() == ACLMessage.REQUEST) {
                 String[] content = msg.getContent().split("\\|");
                 Coordinate coords = new Coordinate(Integer.parseInt(content[1]), Integer.parseInt(content[2]));
-                if(content[0].equals("Price")) {
+                if (content[0].equals("Price")) {
                     System.out.print("<--- Price");
-                    for(City c : my_cities) {
-                        if(c.getCoordinates().equals(coords)) {
+                    for (City c : my_cities) {
+                        if (c.getCoordinates().equals(coords)) {
                             ACLMessage res = msg.createReply();
                             res.setPerformative(ACLMessage.INFORM);
-                            res.setContent(""+c.getCity_price());
+                            res.setContent("" + c.getCity_price());
                             System.out.print("Price --->");
                             send(res);
                             break;
                         }
                     }
-                }
-                else if(content[0].equals("Attack")) {
+                } else if (content[0].equals("Attack")) {
                     System.out.print("<--- Attack");
-                    for(City c : my_cities) {
-                        if(c.getCoordinates().equals(coords)) {
+                    for (City c : my_cities) {
+                        if (c.getCoordinates().equals(coords)) {
                             ACLMessage res = msg.createReply();
                             res.setPerformative(ACLMessage.INFORM);
-                            res.setContent(""+c.getDefences());
+                            res.setContent("" + c.getDefences());
                             System.out.print("Attack --->");
                             send(res);
                             break;
                         }
                     }
-                }
-                else if(content[0].equals("Religion")) {
+                } else if (content[0].equals("Religion")) {
                     System.out.print("<--- Religion");
-                    for(City c : my_cities) {
-                        if(c.getCoordinates().equals(coords)) {
+                    for (City c : my_cities) {
+                        if (c.getCoordinates().equals(coords)) {
                             ACLMessage res = msg.createReply();
                             res.setPerformative(ACLMessage.INFORM);
                             res.setContent("-1");
-                            ArrayList<Pair<AID,Integer>> pairs = c.getReligion_attacker();
-                            for(Pair p : pairs) {
-                                if(p.getKey() == msg.getSender()) {
-                                    res.setContent(""+p.getValue());
+                            ArrayList<Pair<AID, Integer>> pairs = c.getReligion_attacker();
+                            for (Pair p : pairs) {
+                                if (p.getKey() == msg.getSender()) {
+                                    res.setContent("" + p.getValue());
                                     break;
                                 }
                             }
@@ -385,34 +384,31 @@ public abstract class GameAgent extends Agent {
                             break;
                         }
                     }
-                }
-                else if(content[0].equals("CostToAttack")) {
+                } else if (content[0].equals("CostToAttack")) {
                     System.out.print("<--- CostToAttack");
-                    for(City c : my_cities) {
-                        if(c.getCoordinates().equals(coords)) {
+                    for (City c : my_cities) {
+                        if (c.getCoordinates().equals(coords)) {
                             ACLMessage res = msg.createReply();
                             res.setPerformative(ACLMessage.INFORM);
-                            res.setContent(""+c.costOfReligion(Integer.parseInt(content[3])));
+                            res.setContent("" + c.costOfReligion(Integer.parseInt(content[3])));
                             System.out.print("CostToAttack --->");
                             send(res);
                             break;
                         }
                     }
                 }
-            }
-            else {
+            } else {
                 String[] content = msg.getContent().split("\\|");
                 Coordinate coords = new Coordinate(Integer.parseInt(content[1]), Integer.parseInt(content[2]));
-                if(content[0].equals("Mine")) {
+                if (content[0].equals("Mine")) {
                     System.out.println("<--- Mine");
                     System.out.println("Agent " + getLocalName() + ":  Action is " + msg.getContent());
                     City temp = new City(null, coords);
                     my_cities.remove(temp);
-                }
-                else if(content[0].equals("ReligionAttack")) {
+                } else if (content[0].equals("ReligionAttack")) {
                     System.out.print("<--- ReligionAttack");
-                    for(City c : my_cities) {
-                        if(c.getCoordinates() == coords) {
+                    for (City c : my_cities) {
+                        if (c.getCoordinates() == coords) {
                             c.setReligionAttacker(Integer.parseInt(content[3]), new Pair<>(msg.getSender(), Integer.parseInt(content[4])));
                             break;
                         }

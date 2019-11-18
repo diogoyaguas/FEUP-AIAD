@@ -30,6 +30,10 @@ public class GameController extends Agent {
     private Board board;
     private Queue<AID> turns;
 
+    private long start_time;
+    private long finish_time;
+    private long game_time = 120000;
+
     /**
      * Setup game controller.
      */
@@ -81,6 +85,8 @@ public class GameController extends Agent {
                 }
             }
         });
+
+        this.start_time = System.currentTimeMillis();
 
         FSMBehaviour fsm = new FSMBehaviour();
 
@@ -149,12 +155,20 @@ public class GameController extends Agent {
          */
         @Override
         public void action() {
-            if(turns.size() == 0) return;
-            if(turns.size() == 1) {
+            if (turns.size() == 0) return;
+            if (turns.size() == 1) {
                 addActionGUI(turns.peek().getLocalName() + "Won!");
                 doDelete();
                 takeDown();
             }
+            finish_time = System.currentTimeMillis();
+            if ((finish_time - start_time) > game_time) {
+                AID winner = board.getPlayerWithMostCities(turns);
+                addActionGUI(winner.getLocalName() + "Won!");
+                doDelete();
+                takeDown();
+            }
+
             AID p = turns.remove();
             System.out.println("Agent " + getLocalName() + ": " + p.getName() + " Turn");
             msg(p, "Turn", ACLMessage.INFORM);
@@ -170,7 +184,7 @@ public class GameController extends Agent {
          */
         @Override
         public boolean done() {
-            if(end) {
+            if (end) {
                 end = false;
                 return true;
             }
@@ -207,13 +221,13 @@ public class GameController extends Agent {
                 updateBoardGUI();
                 end = true;
                 return;
-            } else if(param[0].equals("Mine") && req.getPerformative() == ACLMessage.INFORM) {
+            } else if (param[0].equals("Mine") && req.getPerformative() == ACLMessage.INFORM) {
                 System.out.println("Agent " + getLocalName() + ": MINE received from " + req.getSender().getName() + ". Action is " + req.getContent());
                 board.getCity(Integer.parseInt(param[1]), Integer.parseInt(param[2])).setOwner(req.getSender());
                 addActionGUI(req.getSender().getLocalName() + " has conquered city at " + Integer.parseInt(param[1]) + "," + Integer.parseInt(param[2]));
                 updateBoardGUI();
                 return;
-            } else if(param[0].equals("Gameover") && req.getPerformative() == ACLMessage.INFORM) {
+            } else if (param[0].equals("Gameover") && req.getPerformative() == ACLMessage.INFORM) {
                 System.out.println("Agent " + getLocalName() + ": Gameover received from " + req.getSender().getName() + ". Action is " + req.getContent());
                 addActionGUI(req.getSender().getLocalName() + " Lost!");
                 turns.remove(req.getSender());
@@ -259,7 +273,7 @@ public class GameController extends Agent {
          */
         @Override
         public boolean done() {
-            if(end) {
+            if (end) {
                 end = false;
                 return true;
             }

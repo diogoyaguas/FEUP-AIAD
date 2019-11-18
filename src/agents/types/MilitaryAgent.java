@@ -56,7 +56,7 @@ public class MilitaryAgent extends GameAgent {
         if (!this.interactive_cities.isEmpty()) {
             int attackers = getTotalOfDefenses() - 10;
             for (City interacting_city : this.interactive_cities) {
-                if(interacting_city.getOwner() == getAID()) continue;
+                if (interacting_city.getOwner() == getAID()) continue;
                 int defenses = requestCityDefense(interacting_city);
                 if (attackers >= defenses) {
                     attackers -= defenses;

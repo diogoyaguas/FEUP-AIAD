@@ -6,6 +6,7 @@ import utils.Coordinate;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Queue;
 import java.util.Random;
 
 public class Board {
@@ -148,5 +149,30 @@ public class Board {
      */
     public int getNumberOfCities() {
         return width * height;
+    }
+
+    /**
+     * Get player with most cities
+     *
+     * @return player with most cities
+     */
+    public AID getPlayerWithMostCities(Queue<AID> turns) {
+        AID player = null;
+        int max_cities = 0;
+
+        for (AID p : turns) {
+            int player_cities = 0;
+            for (int x = 0; x < board.size(); x++) {
+                for (int y = 0; y < board.get(x).size(); y++) {
+                    if (getCity(x, y).getOwner() == p) {
+                        player_cities++;
+                    }
+                }
+            }
+            if (player_cities > max_cities) {
+                player = p;
+            }
+        }
+        return player;
     }
 }
