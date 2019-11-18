@@ -58,6 +58,7 @@ public class GameGUI {
     public void setBoard(Board b) {
         boardPanel.setBoard(b);
         boardPanel.repaint();
+        scrollPane.update(frame.getGraphics());
     }
 
     /**
