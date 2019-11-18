@@ -71,7 +71,6 @@ public class GameController extends Agent {
                             while (it.hasNext()) {
                                 ServiceDescription sd = (ServiceDescription) it.next();
                                 if (sd.getType().equals("player")) {
-//                                    System.out.println("Agent " + getLocalName() + ": " + player.getName() + " joined");
                                     addActionGUI(player.getName() + " joined");
                                     setupPlayer(player);
                                     break;
@@ -107,7 +106,6 @@ public class GameController extends Agent {
     private void setupPlayer(AID player) {
         int[] pos = board.getRandomAvailable();
         msg(player, "Init " + pos[0] + " " + pos[1], ACLMessage.INFORM);
-//        System.out.println("Agent " + getLocalName() + ": " + player.getName() + " - " + pos[0] + "," + pos[1]);
         turns.add(player);
         board.setCityOwner(pos[0], pos[1], player);
         updateBoardGUI();
@@ -168,9 +166,7 @@ public class GameController extends Agent {
             }
 
             AID p = turns.remove();
-//            System.out.println("Agent " + getLocalName() + ": " + p.getName() + " Turn");
             msg(p, "Turn", ACLMessage.INFORM);
-//            System.out.println("Agent " + getLocalName() + ": " + "Turn sent to " + p.getName());
             turns.add(p);
             end = true;
         }
@@ -217,14 +213,11 @@ public class GameController extends Agent {
                 updateBoardGUI();
                 end = true;
                 return;
-            } else if(param[0].equals("Mine") && req.getPerformative() == ACLMessage.INFORM) {
-//                System.out.println("Agent " + getLocalName() + ": MINE received from " + req.getSender().getName() + ". Action is " + req.getContent());
+            } else if (param[0].equals("Mine") && req.getPerformative() == ACLMessage.INFORM) {
                 board.getCity(Integer.parseInt(param[1]), Integer.parseInt(param[2])).setOwner(req.getSender());
-//                addActionGUI(req.getSender().getLocalName() + " has conquered city at " + Integer.parseInt(param[1]) + "," + Integer.parseInt(param[2]));
                 updateBoardGUI();
                 return;
-            } else if(param[0].equals("Gameover") && req.getPerformative() == ACLMessage.INFORM) {
-//                System.out.println("Agent " + getLocalName() + ": Gameover received from " + req.getSender().getName() + ". Action is " + req.getContent());
+            } else if (param[0].equals("Gameover") && req.getPerformative() == ACLMessage.INFORM) {
                 addActionGUI(req.getSender().getLocalName() + " Lost!");
                 turns.remove(req.getSender());
                 end = true;
@@ -258,7 +251,6 @@ public class GameController extends Agent {
             inform.setContent(res.toString());
 
             send(inform);
-//            System.out.println("Agent " + getLocalName() + ": INFORM sent to " + req.getSender().getName() + ", " + res);
 
         }
 

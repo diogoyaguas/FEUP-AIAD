@@ -2,8 +2,6 @@ package agents.types;
 
 import agents.GameAgent;
 import game.board.City;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
 
 import java.util.ArrayList;
 
@@ -20,7 +18,7 @@ public class MilitaryAgent extends GameAgent {
         ArrayList<City> my_new_cities;
 
         // Upgrade their defenses
-        this.moneyToDefenses = 3 * (this.currentMoney / 4);
+        this.moneyToDefenses = (this.currentMoney / 2);
         this.currentMoney -= this.moneyToDefenses;
         upgradeMyDefenses();
         this.currentMoney += this.moneyToDefenses;
@@ -57,7 +55,7 @@ public class MilitaryAgent extends GameAgent {
             int attackers = getTotalOfDefenses() - 10;
             for (City interacting_city : this.interactive_cities) {
                 if (interacting_city.getOwner() == getAID()) continue;
-                int defenses = requestCityDefense(interacting_city);
+                int defenses = requestMessage(interacting_city, "Attack");
                 if (attackers >= defenses) {
                     attackers -= defenses;
                     this.thisCityIsNowMine(interacting_city);
@@ -94,19 +92,6 @@ public class MilitaryAgent extends GameAgent {
         for (City my_cities : this.my_cities) {
             my_cities.addDefences(amountOfDefenses);
         }
-    }
-
-    private int requestCityDefense(City city) {
-        ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
-        req.addReceiver(city.getOwner());
-        req.setContent("Attack|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY());
-        send(req);
-
-        ACLMessage res = blockingReceive(MessageTemplate.and(
-                MessageTemplate.MatchSender(city.getOwner()),
-                MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
-
-        return Integer.parseInt(res.getContent());
     }
 
 }

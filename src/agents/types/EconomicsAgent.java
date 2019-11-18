@@ -2,8 +2,6 @@ package agents.types;
 
 import agents.GameAgent;
 import game.board.City;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
 
 import java.util.ArrayList;
 
@@ -28,7 +26,6 @@ public class EconomicsAgent extends GameAgent {
         this.currentMoney -= this.moneyToReligion;
         defendReligion();
         this.currentMoney += this.moneyToReligion;
-
 
         // Buy opponents cities
         this.moneyToAttack = this.currentMoney / 4;
@@ -60,7 +57,7 @@ public class EconomicsAgent extends GameAgent {
     private ArrayList<City> buyOpponentsCities(ArrayList<City> my_new_cities) {
         for (City city : this.interactive_cities) {
             if (city.getOwner() == getAID()) continue;
-            int cityPrice = requestCityPrice(city);
+            int cityPrice = requestMessage(city, "Price");
 
             if (this.moneyToAttack >= cityPrice) {
                 this.moneyToAttack -= cityPrice;
@@ -72,19 +69,6 @@ public class EconomicsAgent extends GameAgent {
             }
         }
         return my_new_cities;
-    }
-
-    private int requestCityPrice(City city) {
-        ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
-        req.addReceiver(city.getOwner());
-        req.setContent("Price|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY());
-        send(req);
-
-        ACLMessage res = blockingReceive(MessageTemplate.and(
-                MessageTemplate.MatchSender(city.getOwner()),
-                MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
-
-        return Integer.parseInt(res.getContent());
     }
 
 }

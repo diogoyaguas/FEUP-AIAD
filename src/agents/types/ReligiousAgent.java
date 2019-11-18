@@ -63,9 +63,9 @@ public class ReligiousAgent extends GameAgent {
         if (!this.interactive_cities.isEmpty()) {
             for (City interacting_city : this.interactive_cities) {
                 if (interacting_city.getOwner() == getAID()) continue;
-                int current_my_religion = 0;
+                int current_my_religion;
                 int i = 0;
-                current_my_religion = requestCityReligion(interacting_city);
+                current_my_religion = requestMessage(interacting_city, "Religion");
                 if (current_my_religion == -1) {
                     i = -1;
                     current_my_religion = 0;
@@ -92,19 +92,13 @@ public class ReligiousAgent extends GameAgent {
         return my_new_cities;
     }
 
-    private int requestCityReligion(City city) {
-        ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
-        req.addReceiver(city.getOwner());
-        req.setContent("Religion|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY());
-        send(req);
-
-        ACLMessage res = blockingReceive(MessageTemplate.and(
-                MessageTemplate.MatchSender(city.getOwner()),
-                MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
-
-        return Integer.parseInt(res.getContent());
-    }
-
+    /**
+     * Request cost to attack religious.
+     *
+     * @param city  city to attack.
+     * @param value value to attack.
+     * @return cost to attack.
+     */
     private int requestCostToAttack(City city, int value) {
         ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
         req.addReceiver(city.getOwner());
@@ -118,6 +112,13 @@ public class ReligiousAgent extends GameAgent {
         return Integer.parseInt(res.getContent());
     }
 
+    /**
+     * Inform that city will be attacked religious.
+     *
+     * @param city  city that will be attacked.
+     * @param i     religious attacker.
+     * @param value value to attack.
+     */
     private void sendReligionAttack(City city, int i, int value) {
         ACLMessage req = new ACLMessage(ACLMessage.INFORM);
         req.addReceiver(city.getOwner());

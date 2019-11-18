@@ -31,8 +31,6 @@ public class Game {
         players = new ArrayList<>();
         try {
 
-//            sniffer = main_container.createAgent("Sniffer", "jade.tools.sniffer.Sniffer");
-//            sniffer.start();
             game_controller = main_container.createAgent("GameController", "agents.GameController", player_amount, width, height);
             game_controller.start();
         } catch (StaleProxyException e) {
