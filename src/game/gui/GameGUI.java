@@ -52,10 +52,7 @@ public class GameGUI {
                 Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 String s = (String) value;
                 Color color = boardPanel.getColor(s.split(" |@")[0]);
-                setBackground(color);
-                if (isSelected) {
-                    setBackground(getBackground().darker());
-                }
+                setForeground(color);
 
                 return c;
             }
