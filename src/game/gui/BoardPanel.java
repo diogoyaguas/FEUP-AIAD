@@ -40,12 +40,14 @@ public class BoardPanel extends Canvas {
         for (int i = 0; i < board.getHeight(); i++) {
             for (int j = 0; j < board.getWidth(); j++) {
                 g.setColor(board.getColor(i, j));
-                g.fillRect(x, y, addx, addy);
+                g.fill3DRect(x, y, addx, addy, true);
                 x += addx;
             }
             x = 0;
             y += addy;
         }
     }
+
+    public Color getColor(String p) {return board.getColor(p);}
 
 }

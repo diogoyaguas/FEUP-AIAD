@@ -44,6 +44,24 @@ public class GameGUI {
         scrollPane = new JScrollPane(list);
         scrollPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
+        list.setCellRenderer(new DefaultListCellRenderer() {
+
+            @Override
+            public Component getListCellRendererComponent(JList list, Object value, int index,
+                                                          boolean isSelected, boolean cellHasFocus) {
+                Component c = super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                String s = (String) value;
+                Color color = boardPanel.getColor(s.split(" |@")[0]);
+                setBackground(color);
+                if (isSelected) {
+                    setBackground(getBackground().darker());
+                }
+
+                return c;
+            }
+
+        });
+
         panel.add(boardPanel);
         panel.add(scrollPane);
 

@@ -103,6 +103,19 @@ public class Board {
     }
 
     /**
+     * Get color of player.
+     *
+     * @param p player name.
+     * @return color of the player.
+     */
+    public Color getColor(String p) {
+        for(AID aid : players.keySet()) {
+            if(aid.getLocalName().equals(p)) return players.get(aid);
+        }
+        return defaultColor;
+    }
+
+    /**
      * Get board.
      *
      * @return actual board.
