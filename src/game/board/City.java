@@ -1,8 +1,8 @@
 package game.board;
 
 import jade.core.AID;
-import javafx.util.Pair;
 import utils.Coordinate;
+import utils.Pair;
 
 import java.util.ArrayList;
 import java.util.Objects;

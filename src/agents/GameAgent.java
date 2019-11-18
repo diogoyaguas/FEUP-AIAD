@@ -14,8 +14,8 @@ import jade.lang.acl.ACLCodec;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.lang.acl.StringACLCodec;
-import javafx.util.Pair;
 import utils.Coordinate;
+import utils.Pair;
 
 import java.io.StringReader;
 import java.util.ArrayList;

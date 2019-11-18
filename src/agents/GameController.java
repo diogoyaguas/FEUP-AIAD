@@ -67,8 +67,6 @@ public class GameController extends Agent {
                     if (results.length > 0) {
                         for (DFAgentDescription dfd : results) {
                             AID player = dfd.getName();
-                            System.out.println("--------" + player.getClass());
-
                             Iterator it = dfd.getAllServices();
                             while (it.hasNext()) {
                                 ServiceDescription sd = (ServiceDescription) it.next();
