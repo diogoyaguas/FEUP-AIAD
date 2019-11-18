@@ -31,8 +31,8 @@ public class Game {
         players = new ArrayList<>();
         try {
 
-            sniffer = main_container.createAgent("Sniffer", "jade.tools.sniffer.Sniffer");
-            sniffer.start();
+//            sniffer = main_container.createAgent("Sniffer", "jade.tools.sniffer.Sniffer");
+//            sniffer.start();
             game_controller = main_container.createAgent("GameController", "agents.GameController", player_amount, width, height);
             game_controller.start();
         } catch (StaleProxyException e) {
@@ -94,14 +94,17 @@ public class Game {
     private void addAgents(int numberPlayers) {
         int counter = 0;
         while (counter < numberPlayers) {
-            AgentController agent = game_container.addAgent("Player" + ++counter, getRandomPlayerType(), width, height);
+            String type = getRandomPlayerType();
+            AgentController agent = game_container.addAgent("Player" + ++counter, type, width, height);
             if (agent != null) {
                 players.add(agent);
+                System.out.println("Player" + counter + ": " + type);
             } else {
                 System.err.println("Error has ocurred while trying to create new players");
                 System.exit(2);
             }
         }
+        System.out.println("");
     }
 
     /**
