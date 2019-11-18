@@ -160,7 +160,8 @@ public class GameController extends Agent {
             finish_time = System.currentTimeMillis();
             if ((finish_time - start_time) > game_time) {
                 AID winner = board.getPlayerWithMostCities(turns);
-                addActionGUI(winner.getLocalName() + "Won!");
+                addActionGUI(winner.getLocalName() + " Won!");
+                System.out.println(winner.getName() + " Won!");
                 doDelete();
                 takeDown();
             }
