@@ -3,6 +3,8 @@ package agents.types;
 import agents.GameAgent;
 import game.board.City;
 import jade.core.AID;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
@@ -96,5 +98,18 @@ public class ReligiousAgent extends GameAgent {
             }
         }
         return my_new_cities;
+    }
+
+    private int requestCityReligion(City city) {
+        ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
+        req.addReceiver(city.getOwner());
+        req.setContent("Religion|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY());
+        send(req);
+
+        ACLMessage res = blockingReceive(MessageTemplate.and(
+                MessageTemplate.MatchSender(city.getOwner()),
+                MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
+
+        return Integer.parseInt(res.getContent());
     }
 }

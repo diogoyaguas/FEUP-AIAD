@@ -2,6 +2,8 @@ package agents.types;
 
 import agents.GameAgent;
 import game.board.City;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 import java.util.ArrayList;
 
@@ -55,15 +57,13 @@ public class MilitaryAgent extends GameAgent {
             System.out.println("Agent " + getName() + ": Attacking opponents");
             int attackers = getTotalOfDefenses() - 10;
             for (City interacting_city : this.interactive_cities) {
-                // TODO enviar a dizer que a cidade vai ser atacada com o número de attackers e receber a dizer se o número da defesa da cidade para ser usado em baixo
-                if (attackers >= interacting_city.getDefences()) {
-                    System.out.println("Agent " + getName() + ": Getting new city from " + interacting_city.getOwner().getName());
-                    attackers -= interacting_city.getDefences();
-                    interacting_city.setOwner(this.getAID());
+                int defenses = requestCityDefense(interacting_city);
+                if (attackers >= defenses) {
+                    attackers -= defenses;
                     this.thisCityIsNowMine(interacting_city);
+                    interacting_city.setOwner(this.getAID());
                     this.my_cities.add(interacting_city);
                     my_new_cities.add(interacting_city);
-                    // TODO enviar a informar que a cidade foi conquistada para ele retirar da sua lista
                 }
             }
             attackers += 10;
@@ -94,6 +94,19 @@ public class MilitaryAgent extends GameAgent {
         for (City my_cities : this.my_cities) {
             my_cities.addDefences(amountOfDefenses);
         }
+    }
+
+    private int requestCityDefense(City city) {
+        ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
+        req.addReceiver(city.getOwner());
+        req.setContent("Attack|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY());
+        send(req);
+
+        ACLMessage res = blockingReceive(MessageTemplate.and(
+                MessageTemplate.MatchSender(city.getOwner()),
+                MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
+
+        return Integer.parseInt(res.getContent());
     }
 
 }

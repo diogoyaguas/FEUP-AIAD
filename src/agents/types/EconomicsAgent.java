@@ -2,6 +2,8 @@ package agents.types;
 
 import agents.GameAgent;
 import game.board.City;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 import java.util.ArrayList;
 
@@ -57,18 +59,31 @@ public class EconomicsAgent extends GameAgent {
      */
     private ArrayList<City> buyOpponentsCities(ArrayList<City> my_new_cities) {
         for (City city : this.interactive_cities) {
-            // TODO enviar pedido a perguntar o preço da cidade e receber o valor da mesma para ser usado em baixo em vez de diretamente
-            if (this.moneyToAttack >= city.getCity_price()) {
-                this.moneyToAttack -= city.getCity_price();
-                city.setOwner(this.getAID());
+            int cityPrice = requestCityPrice(city);
+
+            if (this.moneyToAttack >= cityPrice) {
+                this.moneyToAttack -= cityPrice;
                 this.thisCityIsNowMine(city);
+                city.setOwner(this.getAID());
                 this.my_cities.add(city);
                 this.pos.add(city.getCoordinates());
                 my_new_cities.add(city);
-                // TODO enviar inform a dizer que a cidade foi comprada para ele retirar da sua lista
             }
         }
         return my_new_cities;
+    }
+
+    private int requestCityPrice(City city) {
+        ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
+        req.addReceiver(city.getOwner());
+        req.setContent("Price|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY());
+        send(req);
+
+        ACLMessage res = blockingReceive(MessageTemplate.and(
+                MessageTemplate.MatchSender(city.getOwner()),
+                MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
+
+        return Integer.parseInt(res.getContent());
     }
 
 }

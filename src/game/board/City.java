@@ -5,6 +5,7 @@ import javafx.util.Pair;
 import utils.Coordinate;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class City implements Comparable {
 
@@ -218,5 +219,19 @@ public class City implements Comparable {
         if (this.current_level < ((City) o).current_level)
             return 1;
         return 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        City city = (City) o;
+        return Objects.equals(my_cords, city.my_cords);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(my_cords);
     }
 }

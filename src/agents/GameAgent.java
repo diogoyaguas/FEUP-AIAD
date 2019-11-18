@@ -140,7 +140,11 @@ public abstract class GameAgent extends Agent {
      * @param city city conquered.
      */
     protected void thisCityIsNowMine(City city) {
-        //TODO avisar o controller e o agent que comprei a cidade dele
+        ACLMessage msg = new ACLMessage(ACLMessage.INFORM);
+        msg.addReceiver(city.getOwner());
+        msg.addReceiver(controller);
+        msg.setContent("Mine|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY());
+        send(msg);
     }
 
     /**
@@ -280,26 +284,17 @@ public abstract class GameAgent extends Agent {
 
                 // Empty city
                 if (content[i].equals("Empty")) {
-//                    System.out.println("Agent " + getAgent().getName() +
-//                            ": Position - " + x + "," + y + " is empty.");
                     empty_cities.add(new City(null, new Coordinate(x, y)));
                 }
 
                 // Invalid coordinates (outside of map)
-                else if (content[i].equals("Null"))
-//                    System.out.println("Agent " + getAgent().getName() +
-//                            ": Position - " + x + "," + y + " doesn't exist.");
-
-                    // Opponent city.
+                else if (content[i].equals("Null")) {}
+                // Opponent city.
                 else {
                     try {
                         StringACLCodec codec = new StringACLCodec(new StringReader(content[i]), null);
                         AID opponent = codec.decodeAID(); // player
-//                        System.out.println("Agent " + getAgent().getName() +
-//                                ": Position - " + x + "," + y + " it's occupied by " +
-//                                opponent.getName());
                         City opponent_city = new City(opponent, new Coordinate(x, y));
-                        //TODO é preciso mais informação sobre a cidade, costo da cidade, religião que eu tenho agora
                         interactive_cities.add(opponent_city);
                     } catch (ACLCodec.CodecException e) {
                         e.printStackTrace();
@@ -332,11 +327,42 @@ public abstract class GameAgent extends Agent {
         @Override
         public void action() {
             ACLMessage msg = receive(MessageTemplate.and(
-                    MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+                    MessageTemplate.or(
+                            MessageTemplate.MatchPerformative(ACLMessage.INFORM),
+                            MessageTemplate.MatchPerformative(ACLMessage.REQUEST)),
                     MessageTemplate.not(MessageTemplate.MatchSender(controller))
             ));
             if (msg == null) return;
-            //TODO: handle player question
+            if(msg.getPerformative() == ACLMessage.REQUEST) {
+                String[] content = msg.getContent().split("\\|");
+                Coordinate coords = new Coordinate(Integer.parseInt(content[1]), Integer.parseInt(content[2]));
+                if(content[0].equals("Price")) {
+                    for(City c : my_cities) {
+                        if(c.getCoordinates() == coords) {
+                            ACLMessage res = msg.createReply();
+                            res.setPerformative(ACLMessage.INFORM);
+                            res.setContent(""+c.getCity_price());
+                            send(res);
+                            break;
+                        }
+                    }
+                }
+                else if(content[0].equals("Mine")) {
+                    City temp = new City(null, coords);
+                    my_cities.remove(temp);
+                }
+                if(content[0].equals("Attack")) {
+                    for(City c : my_cities) {
+                        if(c.getCoordinates() == coords) {
+                            ACLMessage res = msg.createReply();
+                            res.setPerformative(ACLMessage.INFORM);
+                            res.setContent(""+c.getDefences());
+                            send(res);
+                            break;
+                        }
+                    }
+                }
+            }
 
         }
     }

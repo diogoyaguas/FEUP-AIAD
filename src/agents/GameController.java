@@ -202,6 +202,9 @@ public class GameController extends Agent {
                 updateBoardGUI();
                 end = true;
                 return;
+            } else if(param[0].equals("Mine") && req.getPerformative() == ACLMessage.INFORM) {
+                board.getCity(Integer.parseInt(param[1]), Integer.parseInt(param[2])).setOwner(req.getSender());
+                return;
             }
 
             ACLMessage inform = req.createReply();
