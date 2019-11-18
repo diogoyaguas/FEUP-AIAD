@@ -14,6 +14,11 @@ João Augusto dos Santos Lima<br>
 * Student Number: 201605314
 * E-Mail: up201605314@fe.up.pt
 
+### Instructions
+**Build** `make`
+
+**Run** `make run`
+
 ### Project description <hr>
 #### Civilization Project
 
