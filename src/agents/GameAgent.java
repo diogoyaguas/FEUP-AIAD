@@ -48,9 +48,8 @@ public abstract class GameAgent extends Agent {
     public void setup() {
         Object[] args = getArguments();
         this.currentMoney = 0;
-        System.out.println("Setting up agent");
-        this.width = (int) args[0];
-        this.height = (int) args[1];
+        this.width = args[0].getClass() == String.class ? Integer.parseInt((String) args[0]) : (int) args[0];
+        this.height = args[1].getClass() == String.class ? Integer.parseInt((String) args[1]) : (int) args[1];
         DFAgentDescription dfd = new DFAgentDescription();
         dfd.setName(getAID());
         ServiceDescription sd = new ServiceDescription();
@@ -68,7 +67,7 @@ public abstract class GameAgent extends Agent {
         if (params[0].equals("Init")) {
             pos.add(new Coordinate(Integer.parseInt(params[1]), Integer.parseInt(params[2])));
         }
-        System.out.println("Agent " + getName() + ": Coords " + pos.get(0).getX() + "," + pos.get(0).getY() + "\n");
+//        System.out.println("Agent " + getName() + ": Coords " + pos.get(0).getX() + "," + pos.get(0).getY() + "\n");
 
         setMy_cities();
         setInteractive_coordinates();
@@ -132,7 +131,7 @@ public abstract class GameAgent extends Agent {
      * Take down agent.
      */
     public void takeDown() {
-        System.out.println("Agent " + getName() + ": No active cities. Game over");
+        System.out.println("Agent " + getName() + ": Game over");
     }
 
     /**
@@ -157,7 +156,7 @@ public abstract class GameAgent extends Agent {
     protected ArrayList<City> buyEmptyCities(ArrayList<City> new_cities) {
         for (City empty : this.empty_cities) {
             if (this.moneyToBuyEmptyCities >= empty.getCity_price()) {
-                System.out.println("Agent " + getName() + ": Getting a new city");
+//                System.out.println("Agent " + getName() + ": Getting a new city");
                 this.currentMoney -= empty.getCity_price();
                 this.moneyToBuyEmptyCities -= empty.getCity_price();
                 empty.reset();
@@ -191,7 +190,7 @@ public abstract class GameAgent extends Agent {
         if (this.my_cities.size() > this.moneyToDefenses && this.moneyToDefenses != 0) {
             amountOfDefenses = 1;
         }
-        System.out.println("Agent " + getName() + ": Increasing defenses");
+//        System.out.println("Agent " + getName() + ": Increasing defenses");
         for (City c : this.my_cities) {
             this.moneyToDefenses -= amountOfDefenses;
             c.addDefences(amountOfDefenses);
@@ -247,14 +246,13 @@ public abstract class GameAgent extends Agent {
                 msg.setContent("Gameover");
                 send(msg);
                 doDelete();
-                takeDown();
             }
 
             // Get turn money
             getTurnMoney();
 
             // Request information about surroundings
-            System.out.println("Agent " + getName() + ": My turn");
+//            System.out.println("Agent " + getName() + ": My turn");
             StringBuilder ret = new StringBuilder("Which");
             setInteractive_coordinates();
             for (Coordinate cord : interactive_coordinates) {
@@ -267,8 +265,8 @@ public abstract class GameAgent extends Agent {
             msg.setContent(ret.toString());
             send(msg);
 
-            System.out.println("Agent " + getAgent().getName() +
-                    ": Request Sent, " + msg.getContent());
+//            System.out.println("Agent " + getAgent().getName() +
+//                    ": Request Sent, " + msg.getContent());
 
             // Get information about surroundings
             ACLMessage inform = blockingReceive(MessageTemplate.and(MessageTemplate.and(
@@ -276,8 +274,8 @@ public abstract class GameAgent extends Agent {
                     MessageTemplate.MatchSender(controller)),
                     MessageTemplate.MatchProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST)));
 
-            System.out.println("Agent " + getAgent().getName() +
-                    ": Inform Received, " + inform.getContent());
+//            System.out.println("Agent " + getAgent().getName() +
+//                    ": Inform Received, " + inform.getContent());
 
             // Process information about surroundings
             String[] content = inform.getContent().split("\\|");
@@ -316,14 +314,14 @@ public abstract class GameAgent extends Agent {
             msg.addReceiver(controller);
             msg.setContent("Update");
             try {
-                Thread.sleep(250);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             send(msg);
 
-            System.out.println("Agent " + getAgent().getName() +
-                    ": Update Sent");
+//            System.out.println("Agent " + getAgent().getName() +
+//                    ": Update Sent");
 
         }
     }
@@ -341,34 +339,31 @@ public abstract class GameAgent extends Agent {
             if (msg.getPerformative() == ACLMessage.REQUEST) {
                 String[] content = msg.getContent().split("\\|");
                 Coordinate coords = new Coordinate(Integer.parseInt(content[1]), Integer.parseInt(content[2]));
-                if (content[0].equals("Price")) {
-                    System.out.print("<--- Price");
-                    for (City c : my_cities) {
-                        if (c.getCoordinates().equals(coords)) {
+                if(content[0].equals("Price")) {
+                    for(City c : my_cities) {
+                        if(c.getCoordinates().equals(coords)) {
                             ACLMessage res = msg.createReply();
                             res.setPerformative(ACLMessage.INFORM);
-                            res.setContent("" + c.getCity_price());
-                            System.out.print("Price --->");
+                            res.setContent(""+c.getCity_price());
                             send(res);
                             break;
                         }
                     }
-                } else if (content[0].equals("Attack")) {
-                    System.out.print("<--- Attack");
-                    for (City c : my_cities) {
-                        if (c.getCoordinates().equals(coords)) {
+                }
+                else if(content[0].equals("Attack")) {
+                    for(City c : my_cities) {
+                        if(c.getCoordinates().equals(coords)) {
                             ACLMessage res = msg.createReply();
                             res.setPerformative(ACLMessage.INFORM);
-                            res.setContent("" + c.getDefences());
-                            System.out.print("Attack --->");
+                            res.setContent(""+c.getDefences());
                             send(res);
                             break;
                         }
                     }
-                } else if (content[0].equals("Religion")) {
-                    System.out.print("<--- Religion");
-                    for (City c : my_cities) {
-                        if (c.getCoordinates().equals(coords)) {
+                }
+                else if(content[0].equals("Religion")) {
+                    for(City c : my_cities) {
+                        if(c.getCoordinates().equals(coords)) {
                             ACLMessage res = msg.createReply();
                             res.setPerformative(ACLMessage.INFORM);
                             res.setContent("-1");
@@ -379,19 +374,17 @@ public abstract class GameAgent extends Agent {
                                     break;
                                 }
                             }
-                            System.out.print("Religion --->");
                             send(res);
                             break;
                         }
                     }
-                } else if (content[0].equals("CostToAttack")) {
-                    System.out.print("<--- CostToAttack");
-                    for (City c : my_cities) {
-                        if (c.getCoordinates().equals(coords)) {
+                }
+                else if(content[0].equals("CostToAttack")) {
+                    for(City c : my_cities) {
+                        if(c.getCoordinates().equals(coords)) {
                             ACLMessage res = msg.createReply();
                             res.setPerformative(ACLMessage.INFORM);
-                            res.setContent("" + c.costOfReligion(Integer.parseInt(content[3])));
-                            System.out.print("CostToAttack --->");
+                            res.setContent(""+c.costOfReligion(Integer.parseInt(content[3])));
                             send(res);
                             break;
                         }
@@ -400,15 +393,13 @@ public abstract class GameAgent extends Agent {
             } else {
                 String[] content = msg.getContent().split("\\|");
                 Coordinate coords = new Coordinate(Integer.parseInt(content[1]), Integer.parseInt(content[2]));
-                if (content[0].equals("Mine")) {
-                    System.out.println("<--- Mine");
-                    System.out.println("Agent " + getLocalName() + ":  Action is " + msg.getContent());
+                if(content[0].equals("Mine")) {
                     City temp = new City(null, coords);
                     my_cities.remove(temp);
-                } else if (content[0].equals("ReligionAttack")) {
-                    System.out.print("<--- ReligionAttack");
-                    for (City c : my_cities) {
-                        if (c.getCoordinates() == coords) {
+                }
+                else if(content[0].equals("ReligionAttack")) {
+                    for(City c : my_cities) {
+                        if(c.getCoordinates() == coords) {
                             c.setReligionAttacker(Integer.parseInt(content[3]), new Pair<>(msg.getSender(), Integer.parseInt(content[4])));
                             break;
                         }
