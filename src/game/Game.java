@@ -60,11 +60,11 @@ public class Game {
         }
         this.player_amount = playersNumber;
 
-        System.out.print("\nEnter the size of the map (width & height): \n::: ");
+        System.out.print("\nEnter the size of the map (width & height, max: 20x20): \n::: ");
         String width = number.next();
         System.out.print("::: ");
         String height = number.next();
-        while (!width.matches("^[0-9]+$") || !height.matches("^[0-9]+$")) {
+        while (!width.matches("^[0-9]+$") || !height.matches("^[0-9]+$") || Integer.parseInt(width) > 20 || Integer.parseInt(height) > 20) {
             System.out.print("\nEnter valid size of the map: \n::: ");
             width = number.next();
             System.out.print("::: ");
