@@ -7,6 +7,8 @@ import jade.wrapper.AgentController;
 import jade.wrapper.ContainerController;
 import jade.wrapper.StaleProxyException;
 
+import java.util.ArrayList;
+
 /**
  * Has the main container of the game.
  */
@@ -50,11 +52,15 @@ class MainContainer {
      * @return New Agent.
      * @throws StaleProxyException
      */
-    AgentController createAgent(String name, String className, int player_amount, int width, int height) throws StaleProxyException {
-        Object[] args = new Object[3];
+    AgentController createAgent(String name, String className, int player_amount, int width, int height, int e, int m, int r, ArrayList<String> types) throws StaleProxyException {
+        Object[] args = new Object[7];
         args[0] = player_amount;
         args[1] = width;
         args[2] = height;
+        args[3] = e;
+        args[4] = m;
+        args[5] = r;
+        args[6] = types;
         return mainContainer.createNewAgent(name, className, args);
     }
 }
