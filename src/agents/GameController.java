@@ -17,6 +17,8 @@ import jade.lang.acl.MessageTemplate;
 import jade.proto.SubscriptionInitiator;
 import jade.util.leap.Iterator;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -29,6 +31,11 @@ public class GameController extends Agent {
 
     private Board board;
     private Queue<AID> turns;
+    private int numberOfPlayers;
+    private int economicsNumber = 0;
+    private int militaryNumber = 0;
+    private int religiousNumber = 0;
+    private ArrayList<String> types;
 
     private long start_time;
     private long finish_time;
@@ -39,8 +46,15 @@ public class GameController extends Agent {
      */
     public void setup() {
         Object[] args = getArguments();
+        numberOfPlayers = (int) args[0];
         int width = (int) args[1];
         int height = (int) args[2];
+        economicsNumber = (int) args[3];
+        militaryNumber =(int) args[4];
+        religiousNumber =(int) args[5];
+        types = (ArrayList<String>) args[6];
+
+
         turns = new LinkedList<>();
         board = new Board(width, height);
 
@@ -154,6 +168,7 @@ public class GameController extends Agent {
         public void action() {
             if (turns.size() == 0) return;
             if (turns.size() == 1) {
+                updateCSV(Integer.parseInt(turns.peek().getLocalName().replaceAll("\\D+","")));
                 addActionGUI(turns.peek().getLocalName() + " Won!");
                 doDelete();
             }
@@ -184,6 +199,20 @@ public class GameController extends Agent {
                 return true;
             }
             return false;
+        }
+    }
+
+    private void updateCSV(int winner) {
+
+        try {
+            FileWriter fw = new FileWriter("classification.csv", true);
+            fw.write("\n" + types.get(winner) + "," + board.getNumberOfCities()
+                    + "," + (((double)economicsNumber / (double)numberOfPlayers) * 100)
+                    + "," + (((double)militaryNumber / (double)numberOfPlayers) * 100)
+                    + "," + (((double)religiousNumber / (double)numberOfPlayers) * 100));
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

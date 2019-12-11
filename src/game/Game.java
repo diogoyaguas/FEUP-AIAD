@@ -21,6 +21,11 @@ public class Game {
     private int width;
     private int height;
 
+    private int economicsNumber = 0;
+    private int militaryNumber = 0;
+    private int religiousNumber = 0;
+    private ArrayList<String> types = new ArrayList<>(player_amount);
+
     /**
      * Creates a new game by creating the main and game container.
      */
@@ -29,16 +34,17 @@ public class Game {
         main_container = new MainContainer();
         game_container = new Container("PlayersContainer");
         players = new ArrayList<>();
+        for(int i = 0; i < player_amount; i++) {
+            types.add(getRandomPlayerType());
+        }
         try {
-
-            game_controller = main_container.createAgent("GameController", "agents.GameController", player_amount, width, height);
+            game_controller = main_container.createAgent("GameController", "agents.GameController", player_amount, width, height, economicsNumber, militaryNumber, religiousNumber, types);
             game_controller.start();
         } catch (StaleProxyException e) {
             e.printStackTrace();
             System.exit(1);
         }
     }
-
     /**
      * Reads the user desired number of player, and width and height of the map.
      */
@@ -96,8 +102,8 @@ public class Game {
     private void addAgents(int numberPlayers) {
         int counter = 0;
         while (counter < numberPlayers) {
-            String type = getRandomPlayerType();
-            AgentController agent = game_container.addAgent("Player" + ++counter, type, width, height);
+            String type = types.get(counter);
+            AgentController agent = game_container.addAgent("Player" + counter, type, width, height);
             if (agent != null) {
                 players.add(agent);
                 System.out.println("Player" + counter + ": " + type);
@@ -105,8 +111,9 @@ public class Game {
                 System.err.println("Error has ocurred while trying to create new players");
                 System.exit(2);
             }
+            counter++;
         }
-        System.out.println("");
+
     }
 
     /**
@@ -133,10 +140,13 @@ public class Game {
         int type = rnd.nextInt(3) + 1;
         switch (type) {
             case 1:
+                militaryNumber++;
                 return "agents.types.MilitaryAgent";
             case 2:
+                economicsNumber++;
                 return "agents.types.EconomicsAgent";
             case 3:
+                religiousNumber++;
                 return "agents.types.ReligiousAgent";
         }
         return null;
