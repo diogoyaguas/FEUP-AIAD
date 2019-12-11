@@ -31,6 +31,18 @@ public class Game {
      */
     public Game() {
         this.readPlayerInput();
+        helper();
+    }
+
+    public Game(int players, int width, int height) {
+        this.player_amount = players;
+        this.width = width;
+        this.height = height;
+        System.out.println(this.player_amount + " players, " + this.width + " width, " + this.height + " height");
+        helper();
+    }
+
+    public void helper() {
         main_container = new MainContainer();
         game_container = new Container("PlayersContainer");
         players = new ArrayList<>();
@@ -45,6 +57,7 @@ public class Game {
             System.exit(1);
         }
     }
+
     /**
      * Reads the user desired number of player, and width and height of the map.
      */
