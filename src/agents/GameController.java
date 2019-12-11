@@ -36,6 +36,7 @@ public class GameController extends Agent {
     private int militaryNumber = 0;
     private int religiousNumber = 0;
     private ArrayList<String> types;
+    private int successfulAttacks = 0;
 
     private long start_time;
     private long finish_time;
@@ -53,7 +54,6 @@ public class GameController extends Agent {
         militaryNumber =(int) args[4];
         religiousNumber =(int) args[5];
         types = (ArrayList<String>) args[6];
-
 
         turns = new LinkedList<>();
         board = new Board(width, height);
@@ -214,6 +214,18 @@ public class GameController extends Agent {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        try {
+            FileWriter fw = new FileWriter("regression.csv", true);
+            fw.write("\n" + numberOfPlayers + "," + board.getNumberOfCities()
+                    + "," + economicsNumber
+                    + "," + militaryNumber
+                    + "," + religiousNumber
+                    + "," + successfulAttacks);
+            fw.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -245,6 +257,7 @@ public class GameController extends Agent {
                 return;
             } else if (param[0].equals("Mine") && req.getPerformative() == ACLMessage.INFORM) {
                 board.getCity(Integer.parseInt(param[1]), Integer.parseInt(param[2])).setOwner(req.getSender());
+                successfulAttacks++;
                 updateBoardGUI();
                 return;
             } else if (param[0].equals("Gameover") && req.getPerformative() == ACLMessage.INFORM) {

@@ -2,3 +2,6 @@ classification,size,economics%,military%,religious%
 agents.types.EconomicsAgent,4,50.0,0.0,50.0
 agents.types.MilitaryAgent,4,50.0,50.0,0.0
 agents.types.MilitaryAgent,4,50.0,50.0,0.0
+agents.types.MilitaryAgent,4,0.0,50.0,50.0
+agents.types.MilitaryAgent,4,50.0,50.0,0.0
+agents.types.EconomicsAgent,100,30.0,50.0,20.0
