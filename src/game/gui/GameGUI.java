@@ -4,6 +4,7 @@ import game.board.Board;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.WindowEvent;
 
 
 public class GameGUI {
@@ -83,5 +84,9 @@ public class GameGUI {
      */
     public void addAction(String a) {
         ((DefaultListModel) list.getModel()).add(0, a);
+    }
+
+    public void close() {
+        frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
     }
 }

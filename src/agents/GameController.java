@@ -3,8 +3,13 @@ package agents;
 import game.board.Board;
 import game.board.City;
 import game.gui.GameGUI;
+import jade.content.lang.Codec;
+import jade.content.lang.sl.SLCodec;
+import jade.content.onto.Ontology;
+import jade.content.onto.basic.Action;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.Runtime;
 import jade.core.behaviours.Behaviour;
 import jade.core.behaviours.FSMBehaviour;
 import jade.domain.DFService;
@@ -12,6 +17,8 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.domain.JADEAgentManagement.JADEManagementOntology;
+import jade.domain.JADEAgentManagement.ShutdownPlatform;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.SubscriptionInitiator;
@@ -170,15 +177,14 @@ public class GameController extends Agent {
             if (turns.size() == 1) {
                 updateCSV(Integer.parseInt(turns.peek().getLocalName().replaceAll("\\D+","")));
                 addActionGUI(turns.peek().getLocalName() + " Won!");
-                doDelete();
+                stopInstance();
             }
             finish_time = System.currentTimeMillis();
             if ((finish_time - start_time) > game_time) {
                 AID winner = board.getPlayerWithMostCities(turns);
                 addActionGUI(winner.getLocalName() + " Won!");
                 System.out.println(winner.getName() + " Won!");
-                doDelete();
-                takeDown();
+                stopInstance();
             }
 
             AID p = turns.remove();
@@ -200,6 +206,10 @@ public class GameController extends Agent {
             }
             return false;
         }
+    }
+
+    private void stopInstance() { 
+        this.gui.close();
     }
 
     private void updateCSV(int winner) {
