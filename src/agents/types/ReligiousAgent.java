@@ -20,37 +20,42 @@ public class ReligiousAgent extends GameAgent {
 
         ArrayList<City> my_new_cities = new ArrayList<>();
 
-        this.currentMoney += (this.currentMoney * 1000);
+        //this.currentMoney += (this.currentMoney * 1000);
 
         // Buy empty cities
-        this.moneyToBuyEmptyCities = this.currentMoney / 4;
-        this.currentMoney -= this.moneyToBuyEmptyCities;
+        this.moneyToBuyEmptyCities = this.currentMoney;
         my_new_cities = buyEmptyCities(my_new_cities);
-        this.moneyToUpgrade += this.moneyToBuyEmptyCities;
+        // Upgrade their cities
+        this.moneyToUpgrade = this.currentMoney / 2;
+        this.currentMoney -= this.moneyToUpgrade;
+        upgradeCities();
+        this.currentMoney += this.moneyToUpgrade;
 
         // Attack opponent cities with religious attacks
-        this.moneyToAttack += this.currentMoney / 4;
+        this.moneyToAttack += this.currentMoney / 2;
         this.currentMoney -= this.moneyToAttack;
         my_new_cities = attackReligion(my_new_cities);
         this.currentMoney += this.moneyToAttack;
 
         // Defend their cities from religious attacks
-        this.moneyToReligion = this.currentMoney / 4;
+        this.moneyToReligion = this.currentMoney / 2;
         this.currentMoney -= this.moneyToReligion;
         defendReligion();
         this.currentMoney += this.moneyToReligion;
 
         // Upgrade their defenses
-        this.moneyToDefenses = this.currentMoney / 4;
+        this.moneyToDefenses = this.currentMoney / 2;
         this.currentMoney -= this.moneyToDefenses;
         upgradeMyDefenses();
         this.currentMoney += this.moneyToDefenses;
 
+
         // Upgrade their cities
-        this.moneyToUpgrade = this.currentMoney / 4;
+        this.moneyToUpgrade = this.currentMoney;
         this.currentMoney -= this.moneyToUpgrade;
         upgradeCities();
         this.currentMoney += this.moneyToUpgrade;
+
 
         return my_new_cities;
     }

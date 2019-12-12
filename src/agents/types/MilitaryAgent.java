@@ -17,30 +17,28 @@ public class MilitaryAgent extends GameAgent {
 
         ArrayList<City> my_new_cities;
 
+        my_new_cities = attackOpponentCities();
+
+        // Buy empty cities
+        this.moneyToBuyEmptyCities = this.currentMoney / 2;
+        my_new_cities = buyEmptyCities(my_new_cities);
+
+        // Upgrade their cities
+        this.moneyToUpgrade = this.currentMoney / 2;
+        this.currentMoney -= this.moneyToUpgrade;
+        upgradeCities();
+        this.currentMoney += this.moneyToUpgrade;
+
         // Upgrade their defenses
-        this.moneyToDefenses = (this.currentMoney / 2);
+        this.moneyToDefenses = this.currentMoney;
         this.currentMoney -= this.moneyToDefenses;
         upgradeMyDefenses();
         this.currentMoney += this.moneyToDefenses;
 
         // Attack opponents 'cities by gathering all of their cities' defenses
         // and in the end redistributes all remaining defenses by their cities
-        my_new_cities = attackOpponentCities();
-
-        // Buy empty cities
-        this.moneyToBuyEmptyCities = this.currentMoney / 2;
-        this.currentMoney -= this.moneyToBuyEmptyCities;
-        my_new_cities = buyEmptyCities(my_new_cities);
-        this.currentMoney += this.moneyToBuyEmptyCities;
-
-        // Upgrade their cities
-        this.moneyToUpgrade = this.currentMoney;
-        this.currentMoney -= this.moneyToUpgrade;
-        upgradeCities();
-        this.currentMoney += this.moneyToUpgrade;
 
         return my_new_cities;
-
     }
 
     /**

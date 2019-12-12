@@ -184,6 +184,7 @@ public abstract class GameAgent extends Agent {
      * Wasted all defenses money upgrading evenly every city you own.
      */
     protected void upgradeMyDefenses() {
+        if(this.my_cities.size()<=0)return;
         int amountOfDefenses = this.moneyToDefenses / this.my_cities.size();
         if (this.my_cities.size() > this.moneyToDefenses && this.moneyToDefenses != 0) {
             amountOfDefenses = 1;
@@ -292,28 +293,30 @@ public abstract class GameAgent extends Agent {
             empty_cities = new ArrayList<>();
             interactive_cities = new ArrayList<>();
 
-            for (int i = 0; i < content.length; i++) {
-                int x = interactive_coordinates.get(i).getX();
-                int y = interactive_coordinates.get(i).getY();
+            if(interactive_coordinates.size() > 0) {
+                for (int i = 0; i < content.length; i++) {
+                    int x = interactive_coordinates.get(i).getX();
+                    int y = interactive_coordinates.get(i).getY();
 
-                // Empty city
-                if (content[i].equals("Empty")) {
-                    empty_cities.add(new City(null, new Coordinate(x, y)));
-                }
+                    // Empty city
+                    if (content[i].equals("Empty")) {
+                        empty_cities.add(new City(null, new Coordinate(x, y)));
+                    }
 
-                // Invalid coordinates (outside of map)
-                else if (content[i].equals("Null")) {
-                }
-                // Opponent city.
-                else {
-                    try {
-                        StringACLCodec codec = new StringACLCodec(new StringReader(content[i]), null);
-                        AID opponent = codec.decodeAID(); // player
-                        if (opponent.equals(getAID())) continue;
-                        City opponent_city = new City(opponent, new Coordinate(x, y));
-                        interactive_cities.add(opponent_city);
-                    } catch (ACLCodec.CodecException e) {
-                        e.printStackTrace();
+                    // Invalid coordinates (outside of map)
+                    else if (content[i].equals("Null")) {
+                    }
+                    // Opponent city.
+                    else {
+                        try {
+                            StringACLCodec codec = new StringACLCodec(new StringReader(content[i]), null);
+                            AID opponent = codec.decodeAID(); // player
+                            if (opponent.equals(getAID())) continue;
+                            City opponent_city = new City(opponent, new Coordinate(x, y));
+                            interactive_cities.add(opponent_city);
+                        } catch (ACLCodec.CodecException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
