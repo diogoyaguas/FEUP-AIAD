@@ -996,3 +996,5 @@ agents.types.EconomicsAgent,323,50.0,50.0,0.0
 agents.types.ReligiousAgent,140,30.0,10.0,60.0
 agents.types.EconomicsAgent,255,42.857142857142854,28.57142857142857,28.57142857142857
 agents.types.ReligiousAgent,209,30.0,30.0,40.0
+agents.types.ReligiousAgent,120,11.11111111111111,55.55555555555556,33.33333333333333
+agents.types.EconomicsAgent,187,66.66666666666666,0.0,33.33333333333333
