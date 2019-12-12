@@ -24,7 +24,7 @@ class MainContainer {
         Runtime rt = Runtime.instance();
         Profile p1 = new ProfileImpl();
         p1.setParameter(Profile.CONTAINER_NAME, "GameContainer");
-        p1.setParameter(Profile.GUI, "true");
+//        p1.setParameter(Profile.GUI, "true");
         mainContainer = rt.createMainContainer(p1);
     }
 

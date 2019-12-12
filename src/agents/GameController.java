@@ -3,9 +3,6 @@ package agents;
 import game.board.Board;
 import game.board.City;
 import game.gui.GameGUI;
-import jade.content.lang.Codec;
-import jade.content.lang.sl.SLCodec;
-import jade.content.onto.Ontology;
 import jade.content.onto.basic.Action;
 import jade.core.AID;
 import jade.core.Agent;
@@ -17,12 +14,14 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.SearchConstraints;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.domain.FIPAException;
+import jade.domain.FIPANames;
 import jade.domain.JADEAgentManagement.JADEManagementOntology;
 import jade.domain.JADEAgentManagement.ShutdownPlatform;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 import jade.proto.SubscriptionInitiator;
 import jade.util.leap.Iterator;
+import jade.wrapper.ControllerException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -45,10 +44,6 @@ public class GameController extends Agent {
     private ArrayList<String> types;
     private int successfulAttacks = 0;
 
-//    private long start_time;
-//    private long finish_time;
-//    private long game_time = 120000;
-
     private int turn_counter = 0;
 
     /**
@@ -67,8 +62,8 @@ public class GameController extends Agent {
         turns = new LinkedList<>();
         board = new Board(width, height);
 
-        gui = new GameGUI();
-        gui.setBoard(board);
+//        gui = new GameGUI();
+//        gui.setBoard(board);
 
         DFAgentDescription dfd = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
@@ -106,8 +101,6 @@ public class GameController extends Agent {
                 }
             }
         });
-
-//        this.start_time = System.currentTimeMillis();
 
         FSMBehaviour fsm = new FSMBehaviour();
 
@@ -161,7 +154,7 @@ public class GameController extends Agent {
      * Update board GUI.
      */
     private void updateBoardGUI() {
-        gui.setBoard(board);
+        if (gui != null) gui.setBoard(board);
     }
 
     /**
@@ -181,8 +174,6 @@ public class GameController extends Agent {
                 addActionGUI(turns.peek().getLocalName() + " Won!");
                 stopInstance();
             }
-//            finish_time = System.currentTimeMillis();
-//            if ((finish_time - start_time) > game_time) {
             if(turn_counter > Math.pow(board.getNumberOfCities(),2)) {
                 AID winner = board.getPlayerWithMostCities(turns);
                 addActionGUI(winner.getLocalName() + " Won!");
@@ -213,7 +204,16 @@ public class GameController extends Agent {
     }
 
     private void stopInstance() {
-        this.gui.close();
+        if(this.gui != null) {
+            this.gui.close();
+            return;
+        }
+
+        try {
+            getContainerController().getPlatformController().kill();
+        } catch (ControllerException e) {
+            e.printStackTrace();
+        }
     }
 
     private void updateCSV(int winner) {
