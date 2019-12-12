@@ -18,14 +18,8 @@ public class EconomicsAgent extends GameAgent {
         ArrayList<City> my_new_cities = new ArrayList<>();
 
         // Buy empty cities
-        this.moneyToBuyEmptyCities = this.currentMoney;
+        this.moneyToBuyEmptyCities = this.currentMoney ;
         my_new_cities = buyEmptyCities(my_new_cities);
-
-        // Defend their cities from religious attacks
-        this.moneyToReligion = this.currentMoney / 4;
-        this.currentMoney -= this.moneyToReligion;
-        defendReligion();
-        this.currentMoney += this.moneyToReligion;
 
         // Buy opponents cities
         this.moneyToAttack = this.currentMoney / 4;
@@ -38,6 +32,12 @@ public class EconomicsAgent extends GameAgent {
         this.currentMoney -= this.moneyToDefenses;
         this.upgradeMyDefenses();
         this.currentMoney += this.moneyToDefenses;
+
+        // Defend their cities from religious attacks
+        this.moneyToReligion = this.currentMoney / 4;
+        this.currentMoney -= this.moneyToReligion;
+        defendReligion();
+        this.currentMoney += this.moneyToReligion;
 
         // Upgrade their cities
         this.moneyToUpgrade = this.currentMoney / 4;

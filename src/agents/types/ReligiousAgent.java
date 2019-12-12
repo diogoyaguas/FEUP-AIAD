@@ -20,11 +20,13 @@ public class ReligiousAgent extends GameAgent {
 
         ArrayList<City> my_new_cities = new ArrayList<>();
 
-        // Defend their cities from religious attacks
-        this.moneyToReligion = this.currentMoney / 4;
-        this.currentMoney -= this.moneyToReligion;
-        defendReligion();
-        this.currentMoney += this.moneyToReligion;
+        this.currentMoney += (this.currentMoney * 1000);
+
+        // Buy empty cities
+        this.moneyToBuyEmptyCities = this.currentMoney / 4;
+        this.currentMoney -= this.moneyToBuyEmptyCities;
+        my_new_cities = buyEmptyCities(my_new_cities);
+        this.moneyToUpgrade += this.moneyToBuyEmptyCities;
 
         // Attack opponent cities with religious attacks
         this.moneyToAttack += this.currentMoney / 4;
@@ -32,17 +34,17 @@ public class ReligiousAgent extends GameAgent {
         my_new_cities = attackReligion(my_new_cities);
         this.currentMoney += this.moneyToAttack;
 
+        // Defend their cities from religious attacks
+        this.moneyToReligion = this.currentMoney / 4;
+        this.currentMoney -= this.moneyToReligion;
+        defendReligion();
+        this.currentMoney += this.moneyToReligion;
+
         // Upgrade their defenses
         this.moneyToDefenses = this.currentMoney / 4;
         this.currentMoney -= this.moneyToDefenses;
         upgradeMyDefenses();
         this.currentMoney += this.moneyToDefenses;
-
-        // Buy empty cities
-        this.moneyToBuyEmptyCities = this.currentMoney / 4;
-        this.currentMoney -= this.moneyToBuyEmptyCities;
-        my_new_cities = buyEmptyCities(my_new_cities);
-        this.moneyToUpgrade += this.moneyToBuyEmptyCities;
 
         // Upgrade their cities
         this.moneyToUpgrade = this.currentMoney / 4;
@@ -72,7 +74,6 @@ public class ReligiousAgent extends GameAgent {
                 }
 
                 int value_to_attack = 100 - current_my_religion;
-                if (value_to_attack > 50) value_to_attack = 50;
 
                 int cost_to_attack = requestCostToAttack(interacting_city, value_to_attack);
                 if (this.moneyToAttack >= cost_to_attack) {

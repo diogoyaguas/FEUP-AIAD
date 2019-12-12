@@ -41,7 +41,7 @@ public class City implements Comparable {
      * @return The amount of money this percentage costs
      */
     public int costOfReligion(int value) {
-        return ((int) Math.ceil(this.amount_on_upgrade * 2 / 100)) * value;
+        return ((int) Math.ceil(this.amount_on_upgrade * 2 / 1000)) * value;
     }
 
     /**
@@ -90,7 +90,7 @@ public class City implements Comparable {
         this.amount_on_upgrade += this.cost_to_upgrade;
         this.cost_to_upgrade *= 2;
         this.amount_money_producing *= 2;
-        this.city_price = (int) Math.ceil(this.amount_on_upgrade * 2);
+        this.city_price = (int) Math.ceil(this.amount_on_upgrade * 4);
         return true;
     }
 

@@ -65,7 +65,7 @@ public class GameController extends Agent {
         board = new Board(width, height);
 
 //        gui = new GameGUI();
-//        gui.setBoard(board);
+//      gui.setBoard(board);
 
         DFAgentDescription dfd = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
@@ -180,9 +180,9 @@ public class GameController extends Agent {
                 System.out.println(turns.peek().getLocalName() + " Won!");
                 stopInstance();
             }
-            if(turn_counter > board.getNumberOfCities() * 2) {
-                updateCSV(Integer.parseInt(board.getPlayerWithMostCities(turns).getLocalName().replaceAll("\\D+","")));
+            if(turn_counter > board.getNumberOfCities() * 10) {
                 AID winner = board.getPlayerWithMostCities(turns);
+                updateCSV(Integer.parseInt(winner.getLocalName().replaceAll("\\D+","")));
                 addActionGUI(winner.getLocalName() + " Won!");
                 System.out.println(winner.getName() + " Won!");
                 stopInstance();
