@@ -180,7 +180,8 @@ public class GameController extends Agent {
                 System.out.println(turns.peek().getLocalName() + " Won!");
                 stopInstance();
             }
-            if(turn_counter > Math.pow(board.getNumberOfCities(),2)) {
+            if(turn_counter > board.getNumberOfCities() * 2) {
+                updateCSV(Integer.parseInt(board.getPlayerWithMostCities(turns).getLocalName().replaceAll("\\D+","")));
                 AID winner = board.getPlayerWithMostCities(turns);
                 addActionGUI(winner.getLocalName() + " Won!");
                 System.out.println(winner.getName() + " Won!");
