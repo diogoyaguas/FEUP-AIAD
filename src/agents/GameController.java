@@ -45,9 +45,11 @@ public class GameController extends Agent {
     private ArrayList<String> types;
     private int successfulAttacks = 0;
 
-    private long start_time;
-    private long finish_time;
-    private long game_time = 120000;
+//    private long start_time;
+//    private long finish_time;
+//    private long game_time = 120000;
+
+    private int turn_counter = 0;
 
     /**
      * Setup game controller.
@@ -105,7 +107,7 @@ public class GameController extends Agent {
             }
         });
 
-        this.start_time = System.currentTimeMillis();
+//        this.start_time = System.currentTimeMillis();
 
         FSMBehaviour fsm = new FSMBehaviour();
 
@@ -179,8 +181,9 @@ public class GameController extends Agent {
                 addActionGUI(turns.peek().getLocalName() + " Won!");
                 stopInstance();
             }
-            finish_time = System.currentTimeMillis();
-            if ((finish_time - start_time) > game_time) {
+//            finish_time = System.currentTimeMillis();
+//            if ((finish_time - start_time) > game_time) {
+            if(turn_counter > Math.pow(board.getNumberOfCities(),2)) {
                 AID winner = board.getPlayerWithMostCities(turns);
                 addActionGUI(winner.getLocalName() + " Won!");
                 System.out.println(winner.getName() + " Won!");
@@ -189,6 +192,7 @@ public class GameController extends Agent {
 
             AID p = turns.remove();
             msg(p, "Turn", ACLMessage.INFORM);
+            turn_counter++;
             turns.add(p);
             end = true;
         }
@@ -208,7 +212,7 @@ public class GameController extends Agent {
         }
     }
 
-    private void stopInstance() { 
+    private void stopInstance() {
         this.gui.close();
     }
 
