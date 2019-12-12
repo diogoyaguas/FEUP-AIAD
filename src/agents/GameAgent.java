@@ -323,11 +323,11 @@ public abstract class GameAgent extends Agent {
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);
             msg.setContent("Update");
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(200);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
             send(msg);
 
         }

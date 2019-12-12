@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import static java.lang.System.exit;
+
 public class GameController extends Agent {
 
     private static final String TURN = "TURN";
@@ -162,16 +164,20 @@ public class GameController extends Agent {
      */
     private class TurnBehaviour extends Behaviour {
         private boolean end = false;
+        private boolean first = true;
 
         /**
          * Action to inform player's turn
          */
         @Override
         public void action() {
+            if(first && turns.size() != numberOfPlayers) return;
+            first = false;
             if (turns.size() == 0) return;
             if (turns.size() == 1) {
                 updateCSV(Integer.parseInt(turns.peek().getLocalName().replaceAll("\\D+","")));
                 addActionGUI(turns.peek().getLocalName() + " Won!");
+                System.out.println(turns.peek().getLocalName() + " Won!");
                 stopInstance();
             }
             if(turn_counter > Math.pow(board.getNumberOfCities(),2)) {
@@ -208,12 +214,7 @@ public class GameController extends Agent {
             this.gui.close();
             return;
         }
-
-        try {
-            getContainerController().getPlatformController().kill();
-        } catch (ControllerException e) {
-            e.printStackTrace();
-        }
+        exit(0);
     }
 
     private void updateCSV(int winner) {
