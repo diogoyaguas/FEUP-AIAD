@@ -90,7 +90,7 @@ public class City implements Comparable {
         this.amount_on_upgrade += this.cost_to_upgrade;
         this.cost_to_upgrade *= 2;
         this.amount_money_producing *= 2;
-        this.city_price = (int) Math.ceil(this.amount_on_upgrade * 4);
+        this.city_price = (int) Math.ceil(this.amount_on_upgrade * 3);
         return true;
     }
 
@@ -104,7 +104,7 @@ public class City implements Comparable {
         amount_on_upgrade = 0;
         religion_attacker = new ArrayList<>();
         defences = 0;
-        city_price = 10;
+        city_price = 100;
     }
 
     public void resetReligion() {
