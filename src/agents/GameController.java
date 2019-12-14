@@ -234,10 +234,10 @@ public class GameController extends Agent {
 
         try {
             FileWriter fw = new FileWriter("classification.csv", true);
-            String ganhou = "nao";
+            String win = "false";
             if(winner == 0)
-                ganhou = "sim";
-            fw.write("\n" + ganhou + "," + types.get(0) + "," + board.getNumberOfCities()
+                ganhou = "true";
+            fw.write("\n" + win + "," + types.get(0) + "," + board.getNumberOfCities()
                     + "," + economicsNumber
                     + "," + militaryNumber
                     + "," + religiousNumber);
