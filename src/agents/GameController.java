@@ -236,7 +236,7 @@ public class GameController extends Agent {
             FileWriter fw = new FileWriter("classification.csv", true);
             String win = "false";
             if(winner == 0)
-                ganhou = "true";
+                win = "true";
             fw.write("\n" + win + "," + types.get(0) + "," + board.getNumberOfCities()
                     + "," + economicsNumber
                     + "," + militaryNumber
