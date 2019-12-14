@@ -49,6 +49,8 @@ public class GameController extends Agent {
     private int turn_counter = 0;
     private int counter=0;
 
+    long startTime = 0;
+
     /**
      * Setup game controller.
      */
@@ -67,6 +69,8 @@ public class GameController extends Agent {
 
 //        gui = new GameGUI();
 //      gui.setBoard(board);
+
+        startTime = System.nanoTime();
 
         DFAgentDescription dfd = new DFAgentDescription();
         ServiceDescription sd = new ServiceDescription();
@@ -180,6 +184,8 @@ public class GameController extends Agent {
         public void action() {
             if(first && turns.size() != numberOfPlayers) return;
             first = false;
+            long endTime   = System.nanoTime();
+            long totalTime = endTime - startTime;
             if (turns.size() == 0) return;
             if (turns.size() == 1) {
                 updateCSV(Integer.parseInt(turns.peek().getLocalName().replaceAll("\\D+","")));
@@ -187,7 +193,7 @@ public class GameController extends Agent {
                 System.out.println(turns.peek().getLocalName() + " Won!");
                 stopInstance();
             }
-            if(turn_counter > board.getNumberOfCities() * 2) {
+            if(turn_counter > board.getNumberOfCities() * 2 || totalTime >= 9 * Math.pow(10,10)) {
                 AID winner = board.getPlayerWithMostCities(turns);
                 if(winner != null)
                 {
