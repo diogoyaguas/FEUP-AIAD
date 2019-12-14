@@ -117,6 +117,7 @@ public abstract class GameAgent extends Agent {
         for (City city : this.my_cities) {
             this.currentMoney += city.getMoneyProduced();
         }
+        this.currentMoney+=300;
     }
 
     /**

@@ -47,6 +47,7 @@ public class GameController extends Agent {
     private int successfulAttacks = 0;
 
     private int turn_counter = 0;
+    private int counter=0;
 
     /**
      * Setup game controller.
@@ -123,6 +124,12 @@ public class GameController extends Agent {
      */
     private void setupPlayer(AID player) {
         int[] pos = board.getRandomAvailable();
+        if(player.getName().split("@")[0].equals("Player0"))
+        {
+            pos[0]=0;
+            pos[1]=0;
+        }
+        else while (pos[0]==0 &&pos[1]==0)pos = board.getRandomAvailable();
         msg(player, "Init " + pos[0] + " " + pos[1], ACLMessage.INFORM);
         turns.add(player);
         board.setCityOwner(pos[0], pos[1], player);
@@ -190,6 +197,8 @@ public class GameController extends Agent {
 
             AID p = turns.remove();
             msg(p, "Turn", ACLMessage.INFORM);
+            if(Integer.parseInt(p.getLocalName().replaceAll("\\D+",""))==0)
+                counter++;
             turn_counter++;
             turns.add(p);
             end = true;
@@ -222,10 +231,13 @@ public class GameController extends Agent {
 
         try {
             FileWriter fw = new FileWriter("classification.csv", true);
-            fw.write("\n" + types.get(winner) + "," + board.getNumberOfCities()
-                    + "," + (((double)economicsNumber / (double)numberOfPlayers) * 100)
-                    + "," + (((double)militaryNumber / (double)numberOfPlayers) * 100)
-                    + "," + (((double)religiousNumber / (double)numberOfPlayers) * 100));
+            String ganhou = "nao";
+            if(winner == 0)
+                ganhou = "sim";
+            fw.write("\n" + ganhou + "," + types.get(0) + "," + board.getNumberOfCities()
+                    + "," + economicsNumber
+                    + "," + militaryNumber
+                    + "," + religiousNumber);
             fw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -233,11 +245,12 @@ public class GameController extends Agent {
 
         try {
             FileWriter fw = new FileWriter("regression.csv", true);
-            fw.write("\n" + numberOfPlayers + "," + board.getNumberOfCities()
+            fw.write("\n" + board.getNumberOfCities()
+                    + "," + types.get(0) + "," + board.getNumberOfCities()
                     + "," + economicsNumber
                     + "," + militaryNumber
                     + "," + religiousNumber
-                    + "," + successfulAttacks);
+                    + "," + Math.ceil(successfulAttacks/counter));
             fw.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -273,7 +286,9 @@ public class GameController extends Agent {
                 return;
             } else if (param[0].equals("Mine") && req.getPerformative() == ACLMessage.INFORM) {
                 board.getCity(Integer.parseInt(param[1]), Integer.parseInt(param[2])).setOwner(req.getSender());
-                successfulAttacks++;
+                if(req.getSender().getLocalName().equals("Player0")) {
+                    successfulAttacks++;
+                }
                 updateBoardGUI();
                 return;
             } else if (param[0].equals("Gameover") && req.getPerformative() == ACLMessage.INFORM) {
