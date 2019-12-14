@@ -180,6 +180,7 @@ public class GameController extends Agent {
         public void action() {
             if(first && turns.size() != numberOfPlayers) return;
             first = false;
+            System.out.println(turn_counter + " > " + board.getNumberOfCities() * 2);
             if (turns.size() == 0) return;
             if (turns.size() == 1) {
                 updateCSV(Integer.parseInt(turns.peek().getLocalName().replaceAll("\\D+","")));
@@ -245,8 +246,7 @@ public class GameController extends Agent {
 
         try {
             FileWriter fw = new FileWriter("regression.csv", true);
-            fw.write("\n" + board.getNumberOfCities()
-                    + "," + types.get(0) + "," + board.getNumberOfCities()
+            fw.write("\n" + types.get(0) + "," + board.getNumberOfCities()
                     + "," + economicsNumber
                     + "," + militaryNumber
                     + "," + religiousNumber

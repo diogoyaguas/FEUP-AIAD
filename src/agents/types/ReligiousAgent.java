@@ -22,27 +22,37 @@ public class ReligiousAgent extends GameAgent {
 
         //this.currentMoney += (this.currentMoney * 1000);
 
+        System.out.println("empty");
         // Buy empty cities
         this.moneyToBuyEmptyCities = this.currentMoney;
         my_new_cities = buyEmptyCities(my_new_cities);
+
+
+        System.out.println("upgrade city");
         // Upgrade their cities
         this.moneyToUpgrade = this.currentMoney / 2;
         this.currentMoney -= this.moneyToUpgrade;
         upgradeCities();
         this.currentMoney += this.moneyToUpgrade;
 
+
+        System.out.println("attack rel");
         // Attack opponent cities with religious attacks
         this.moneyToAttack += this.currentMoney / 2;
         this.currentMoney -= this.moneyToAttack;
         my_new_cities = attackReligion(my_new_cities);
         this.currentMoney += this.moneyToAttack;
 
+
+        System.out.println("def rel");
         // Defend their cities from religious attacks
         this.moneyToReligion = this.currentMoney / 2;
         this.currentMoney -= this.moneyToReligion;
         defendReligion();
         this.currentMoney += this.moneyToReligion;
 
+
+        System.out.println("upgrade def");
         // Upgrade their defenses
         this.moneyToDefenses = this.currentMoney / 2;
         this.currentMoney -= this.moneyToDefenses;
@@ -50,6 +60,7 @@ public class ReligiousAgent extends GameAgent {
         this.currentMoney += this.moneyToDefenses;
 
 
+        System.out.println("upgrade city");
         // Upgrade their cities
         this.moneyToUpgrade = this.currentMoney;
         this.currentMoney -= this.moneyToUpgrade;

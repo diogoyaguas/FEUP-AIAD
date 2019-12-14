@@ -17,18 +17,24 @@ public class MilitaryAgent extends GameAgent {
 
         ArrayList<City> my_new_cities;
 
+        System.out.println("attack");
         my_new_cities = attackOpponentCities();
 
+        System.out.println("empty");
         // Buy empty cities
         this.moneyToBuyEmptyCities = this.currentMoney / 2;
         my_new_cities = buyEmptyCities(my_new_cities);
 
+
+        System.out.println("upgrade city");
         // Upgrade their cities
         this.moneyToUpgrade = this.currentMoney / 2;
         this.currentMoney -= this.moneyToUpgrade;
         upgradeCities();
         this.currentMoney += this.moneyToUpgrade;
 
+
+        System.out.println("upgrade def");
         // Upgrade their defenses
         this.moneyToDefenses = this.currentMoney;
         this.currentMoney -= this.moneyToDefenses;

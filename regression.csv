@@ -1,2 +1,2 @@
-numberCities,type,numberCidades,economicsNumber,militaryNumber,religiousNumber,attacksPerTurn
-100,agents.types.MilitaryAgent,100,3,5,2,3.0
+type,numberCities,economicsNumber,militaryNumber,religiousNumber,attacksPerTurn
+agents.types.EconomicsAgent,144,3,2,0,1.0

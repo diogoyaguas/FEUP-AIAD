@@ -266,7 +266,6 @@ public abstract class GameAgent extends Agent {
                 send(msg);
                 doDelete();
             }
-
             // Get turn money
             getTurnMoney();
 
@@ -277,6 +276,7 @@ public abstract class GameAgent extends Agent {
                 ret.append("|").append(cord);
             }
 
+            System.out.println("which");
             ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
             msg.addReceiver(controller);
             msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
@@ -322,7 +322,9 @@ public abstract class GameAgent extends Agent {
                 }
             }
 
+            System.out.println("logic");
             logic();
+            System.out.println("update");
 
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);
@@ -332,6 +334,7 @@ public abstract class GameAgent extends Agent {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
             send(msg);
 
         }
