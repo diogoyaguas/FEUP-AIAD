@@ -224,13 +224,19 @@ public abstract class GameAgent extends Agent {
     protected int requestMessage(City city, String request) {
         ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
         req.addReceiver(city.getOwner());
-        System.out.println(city.getOwner().getLocalName() + " " + this.getLocalName());
         req.setContent(request + "|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY());
         send(req);
 
         ACLMessage res = blockingReceive(MessageTemplate.and(
                 MessageTemplate.MatchSender(city.getOwner()),
                 MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
+
+        while(res.getContent().contains("Mine")) {
+            res = blockingReceive(MessageTemplate.and(
+                MessageTemplate.MatchSender(city.getOwner()),
+                MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
+            System.out.println("LOOOOOOOOOOOOP");
+        }
 
         return Integer.parseInt(res.getContent());
     }
@@ -321,9 +327,7 @@ public abstract class GameAgent extends Agent {
                     }
                 }
             }
-            System.out.println("logic");
             logic();
-            System.out.println("end logic");
 
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);
