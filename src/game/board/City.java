@@ -108,7 +108,7 @@ public class City implements Comparable {
     }
 
     public void resetReligion() {
-        religion_attacker = new ArrayList<>();
+        religion_attacker = new ArrayList<Pair<AID, Integer>>();
     }
 
     /**

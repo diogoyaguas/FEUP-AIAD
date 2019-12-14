@@ -224,6 +224,7 @@ public abstract class GameAgent extends Agent {
     protected int requestMessage(City city, String request) {
         ACLMessage req = new ACLMessage(ACLMessage.REQUEST);
         req.addReceiver(city.getOwner());
+        System.out.println(city.getOwner().getLocalName() + " " + this.getLocalName());
         req.setContent(request + "|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY());
         send(req);
 
@@ -276,7 +277,6 @@ public abstract class GameAgent extends Agent {
                 ret.append("|").append(cord);
             }
 
-            System.out.println("which");
             ACLMessage msg = new ACLMessage(ACLMessage.REQUEST);
             msg.addReceiver(controller);
             msg.setProtocol(FIPANames.InteractionProtocol.FIPA_REQUEST);
@@ -321,10 +321,9 @@ public abstract class GameAgent extends Agent {
                     }
                 }
             }
-
             System.out.println("logic");
             logic();
-            System.out.println("update");
+            System.out.println("end logic");
 
             msg = new ACLMessage(ACLMessage.INFORM);
             msg.addReceiver(controller);

@@ -18,13 +18,11 @@ public class EconomicsAgent extends GameAgent {
         ArrayList<City> my_new_cities = new ArrayList<>();
 
 
-        System.out.println("buy empty");
         // Buy empty cities
         this.moneyToBuyEmptyCities = this.currentMoney ;
         my_new_cities = buyEmptyCities(my_new_cities);
 
 
-        System.out.println("upgrade def");
         // Upgrade their defenses
         this.moneyToDefenses = this.currentMoney / 2;
         this.currentMoney -= this.moneyToDefenses;
@@ -32,7 +30,6 @@ public class EconomicsAgent extends GameAgent {
         this.currentMoney += this.moneyToDefenses;
 
 
-        System.out.println("buy op");
         // Buy opponents cities
         this.moneyToAttack = this.currentMoney / 4;
         this.currentMoney -= this.moneyToAttack;
@@ -40,7 +37,6 @@ public class EconomicsAgent extends GameAgent {
         this.currentMoney += this.moneyToAttack;
 
 
-        System.out.println("upgrade city");
         // Upgrade their cities
         this.moneyToUpgrade = this.currentMoney / 4;
         this.currentMoney -= this.moneyToUpgrade;

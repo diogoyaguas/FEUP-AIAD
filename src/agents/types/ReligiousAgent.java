@@ -22,13 +22,11 @@ public class ReligiousAgent extends GameAgent {
 
         //this.currentMoney += (this.currentMoney * 1000);
 
-        System.out.println("empty");
         // Buy empty cities
         this.moneyToBuyEmptyCities = this.currentMoney;
         my_new_cities = buyEmptyCities(my_new_cities);
 
 
-        System.out.println("upgrade city");
         // Upgrade their cities
         this.moneyToUpgrade = this.currentMoney / 2;
         this.currentMoney -= this.moneyToUpgrade;
@@ -36,7 +34,6 @@ public class ReligiousAgent extends GameAgent {
         this.currentMoney += this.moneyToUpgrade;
 
 
-        System.out.println("attack rel");
         // Attack opponent cities with religious attacks
         this.moneyToAttack += this.currentMoney / 2;
         this.currentMoney -= this.moneyToAttack;
@@ -44,7 +41,6 @@ public class ReligiousAgent extends GameAgent {
         this.currentMoney += this.moneyToAttack;
 
 
-        System.out.println("def rel");
         // Defend their cities from religious attacks
         this.moneyToReligion = this.currentMoney / 2;
         this.currentMoney -= this.moneyToReligion;
@@ -52,7 +48,6 @@ public class ReligiousAgent extends GameAgent {
         this.currentMoney += this.moneyToReligion;
 
 
-        System.out.println("upgrade def");
         // Upgrade their defenses
         this.moneyToDefenses = this.currentMoney / 2;
         this.currentMoney -= this.moneyToDefenses;
@@ -60,13 +55,13 @@ public class ReligiousAgent extends GameAgent {
         this.currentMoney += this.moneyToDefenses;
 
 
-        System.out.println("upgrade city");
         // Upgrade their cities
         this.moneyToUpgrade = this.currentMoney;
         this.currentMoney -= this.moneyToUpgrade;
         upgradeCities();
         this.currentMoney += this.moneyToUpgrade;
 
+        System.out.println("ended");
 
         return my_new_cities;
     }
@@ -83,6 +78,8 @@ public class ReligiousAgent extends GameAgent {
                 if (interacting_city.getOwner() == getAID()) continue;
                 int current_my_religion;
                 int i = 0;
+
+                System.out.println("religion values");
                 current_my_religion = requestMessage(interacting_city, "Religion");
                 if (current_my_religion == -1) {
                     i = -1;
@@ -91,16 +88,19 @@ public class ReligiousAgent extends GameAgent {
 
                 int value_to_attack = 100 - current_my_religion;
 
+                System.out.println("cost to attack");
                 int cost_to_attack = requestCostToAttack(interacting_city, value_to_attack);
                 if (this.moneyToAttack >= cost_to_attack) {
                     this.moneyToAttack -= cost_to_attack;
                     if (current_my_religion + value_to_attack >= 100) {
-                        interacting_city.resetReligion();
+                        System.out.println("mine city");
                         this.thisCityIsNowMine(interacting_city);
+                        interacting_city.resetReligion();
                         interacting_city.setOwner(this.getAID());
                         this.my_cities.add(interacting_city);
                         my_new_cities.add(interacting_city);
                     } else {
+                        System.out.println("send attack");
                         sendReligionAttack(interacting_city, i, current_my_religion + value_to_attack);
                     }
                 }

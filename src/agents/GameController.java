@@ -190,9 +190,12 @@ public class GameController extends Agent {
             }
             if(turn_counter > board.getNumberOfCities() * 2) {
                 AID winner = board.getPlayerWithMostCities(turns);
-                updateCSV(Integer.parseInt(winner.getLocalName().replaceAll("\\D+","")));
-                addActionGUI(winner.getLocalName() + " Won!");
-                System.out.println(winner.getName() + " Won!");
+                if(winner != null)
+                {
+                    updateCSV(Integer.parseInt(winner.getLocalName().replaceAll("\\D+","")));
+                    addActionGUI(winner.getLocalName() + " Won!");
+                    System.out.println(winner.getName() + " Won!");
+                }
                 stopInstance();
             }
 
