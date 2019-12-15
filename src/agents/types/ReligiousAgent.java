@@ -87,8 +87,6 @@ public class ReligiousAgent extends GameAgent {
 
                 int cost_to_attack = requestCostToAttack(interacting_city, value_to_attack);
 
-
-
                 if (this.moneyToAttack >= cost_to_attack) {
                     this.moneyToAttack -= cost_to_attack;
                     if (current_my_religion + value_to_attack >= 100) {
@@ -123,8 +121,6 @@ public class ReligiousAgent extends GameAgent {
                 MessageTemplate.MatchSender(city.getOwner()),
                 MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
 
-        System.out.println(res.getContent());
-
         return Integer.parseInt(res.getContent());
     }
 
@@ -139,7 +135,6 @@ public class ReligiousAgent extends GameAgent {
         ACLMessage req = new ACLMessage(ACLMessage.INFORM);
         req.addReceiver(city.getOwner());
         req.setContent("ReligionAttack|" + city.getCoordinates().getX() + "|" + city.getCoordinates().getY() + "|" + i + "|" + value);
-        System.out.println(req.getContent());
         send(req);
     }
 }

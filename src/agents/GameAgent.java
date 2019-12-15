@@ -235,7 +235,6 @@ public abstract class GameAgent extends Agent {
             res = blockingReceive(MessageTemplate.and(
                 MessageTemplate.MatchSender(city.getOwner()),
                 MessageTemplate.MatchPerformative(ACLMessage.INFORM)));
-            System.out.println("LOOOOOOOOOOOOP");
         }
 
         return Integer.parseInt(res.getContent());
@@ -361,8 +360,6 @@ public abstract class GameAgent extends Agent {
             ));
             if (msg == null) return;
             if (msg.getPerformative() == ACLMessage.REQUEST) {
-                System.out.println(msg.getSender());
-                System.out.println(msg.getContent());
                 String[] content = msg.getContent().split("\\|");
                 Coordinate coords = new Coordinate(Integer.parseInt(content[1]), Integer.parseInt(content[2]));
                 if (content[0].equals("Price")) {
@@ -371,7 +368,6 @@ public abstract class GameAgent extends Agent {
                             ACLMessage res = msg.createReply();
                             res.setPerformative(ACLMessage.INFORM);
                             res.setContent("" + c.getCity_price());
-                            System.out.println(res.getContent());
                             send(res);
                             break;
                         }
@@ -382,7 +378,6 @@ public abstract class GameAgent extends Agent {
                             ACLMessage res = msg.createReply();
                             res.setPerformative(ACLMessage.INFORM);
                             res.setContent("" + c.getDefences());
-                            System.out.println(res.getContent());                       
                             send(res);
                             break;
                         }
@@ -400,7 +395,6 @@ public abstract class GameAgent extends Agent {
                                     break;
                                 }
                             }
-                            System.out.println(res.getContent());
                             send(res);
                             break;
                         }
@@ -411,7 +405,6 @@ public abstract class GameAgent extends Agent {
                             ACLMessage res = msg.createReply();
                             res.setPerformative(ACLMessage.INFORM);
                             res.setContent("" + c.costOfReligion(Integer.parseInt(content[3])));
-                            System.out.println(res.getContent());
                             send(res);
                             break;
                         }
