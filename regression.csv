@@ -1456,3 +1456,6 @@ agents.types.EconomicsAgent,100,5,2,3,1.0
 agents.types.ReligiousAgent,140,1,0,2,6.0
 agents.types.MilitaryAgent,153,3,4,2,1.0
 agents.types.EconomicsAgent,120,1,0,3,1.0
+agents.types.ReligiousAgent,306,4,3,3,16.0
+agents.types.ReligiousAgent,40,0,2,3,4.0
+agents.types.MilitaryAgent,98,1,2,0,4.0
